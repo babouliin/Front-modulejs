@@ -35,7 +35,7 @@ const Profile = () => {
 
   const profilErr = () => {
     let invalid = false;
-    setState({ prfilLoading: true });
+    setState({ ...state, prfilLoading: true });
     const {
       profilEmail, profilPseudo, profilPassword, profilPasswordConfirmation,
     } = state;
@@ -47,49 +47,49 @@ const Profile = () => {
     console.log(profilPasswordConfirmation);
 
     if (!profilEmail || profilEmail.length === 0) {
-      setState({ profilEmailError: 'L\'adresse e-mail est requise' });
+      setState({ ...state, profilEmailError: 'L\'adresse e-mail est requise' });
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(profilEmail)) {
-      setState({ profilEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
+      setState({ ...state, profilEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
       invalid = true;
     } else {
-      setState({ profilEmailError: '' });
+      setState({ ...state, profilEmailError: '' });
     }
 
     if (!profilPseudo || profilPseudo.length === 0) {
-      setState({ profilPseudoError: 'Le pseudo est requis' });
+      setState({ ...state, profilPseudoError: 'Le pseudo est requis' });
       invalid = true;
     } else if (profilPseudo.length < 4) {
-      setState({ profilPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
+      setState({ ...state, profilPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
       invalid = true;
     } else {
-      setState({ profilPseudoError: '' });
+      setState({ ...state, profilPseudoError: '' });
     }
 
     if (!profilPassword || profilPassword.length === 0) {
-      setState({ profilPasswordError: 'Un mot de passe est requis' });
+      setState({ ...state, profilPasswordError: 'Un mot de passe est requis' });
       invalid = true;
     } else if (profilPassword.length < 8 || !/\d/.test(profilPassword) || !/[a-zA-Z]/.test(profilPassword)) {
-      setState({ profilPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
+      setState({ ...state, profilPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
       invalid = true;
     } else {
-      setState({ profilPasswordError: '' });
+      setState({ ...state, profilPasswordError: '' });
     }
 
     if (profilPassword !== profilPasswordConfirmation) {
-      setState({ profilPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
+      setState({ ...state, profilPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
       invalid = true;
     } else {
-      setState({ profilPasswordConfirmationError: '' });
+      setState({ ...state, profilPasswordConfirmationError: '' });
     }
 
     if (invalid) {
-      setState({ profilLoading: false });
+      setState({ ...state, profilLoading: false });
       return;
     }
 
     localStorage.setItem('email', profilEmail);
-    setState({ profilLoading: false, profilError: '' });
+    setState({ ...state, profilLoading: false, profilError: '' });
     console.log('OK');
     // profil(props);
   };

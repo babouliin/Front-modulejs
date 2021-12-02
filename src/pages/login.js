@@ -48,7 +48,7 @@ const Login = (props) => {
     let invalid = false;
     let error = '';
     const { loginEmail, loginPassword } = state;
-    setState({ loginLoading: true });
+    setState({ ...state, loginLoading: true });
 
     console.log('login');
     console.log(loginEmail);
@@ -71,12 +71,12 @@ const Login = (props) => {
     }
 
     if (invalid) {
-      setState({ loginLoading: false, loginError: error });
+      setState({ ...state, loginLoading: false, loginError: error });
       return;
     }
 
     localStorage.setItem('email', loginEmail);
-    setState({ loginError: '', loginLoading: false });
+    setState({ ...state, loginError: '', loginLoading: false });
     console.log('OK');
     login(props);
   };
@@ -145,7 +145,7 @@ const Login = (props) => {
 
   const signupErr = () => {
     let invalid = false;
-    setState({ signupLoading: true });
+    setState({ ...state, signupLoading: true });
     const {
       signupEmail, signupPseudo, signupPassword, signupPasswordConfirmation,
     } = state;
@@ -157,49 +157,49 @@ const Login = (props) => {
     console.log(signupPasswordConfirmation);
 
     if (!signupEmail || signupEmail.length === 0) {
-      setState({ signupEmailError: 'L\'adresse e-mail est requise' });
+      setState({ ...state, signupEmailError: 'L\'adresse e-mail est requise' });
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(signupEmail)) {
-      setState({ signupEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
+      setState({ ...state, signupEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
       invalid = true;
     } else {
-      setState({ signupEmailError: '' });
+      setState({ ...state, signupEmailError: '' });
     }
 
     if (!signupPseudo || signupPseudo.length === 0) {
-      setState({ signupPseudoError: 'Le pseudo est requis' });
+      setState({ ...state, signupPseudoError: 'Le pseudo est requis' });
       invalid = true;
     } else if (signupPseudo.length < 4) {
-      setState({ signupPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
+      setState({ ...state, signupPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
       invalid = true;
     } else {
-      setState({ signupPseudoError: '' });
+      setState({ ...state, signupPseudoError: '' });
     }
 
     if (!signupPassword || signupPassword.length === 0) {
-      setState({ signupPasswordError: 'Un mot de passe est requis' });
+      setState({ ...state, signupPasswordError: 'Un mot de passe est requis' });
       invalid = true;
     } else if (signupPassword.length < 8 || !/\d/.test(signupPassword) || !/[a-zA-Z]/.test(signupPassword)) {
-      setState({ signupPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
+      setState({ ...state, signupPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
       invalid = true;
     } else {
-      setState({ signupPasswordError: '' });
+      setState({ ...state, signupPasswordError: '' });
     }
 
     if (signupPassword !== signupPasswordConfirmation) {
-      setState({ signupPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
+      setState({ ...state, signupPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
       invalid = true;
     } else {
-      setState({ signupPasswordConfirmationError: '' });
+      setState({ ...state, signupPasswordConfirmationError: '' });
     }
 
     if (invalid) {
-      setState({ signupLoading: false });
+      setState({ ...state, signupLoading: false });
       return;
     }
 
     localStorage.setItem('email', signupEmail);
-    setState({ signupLoading: false, signupError: '' });
+    setState({ ...state, signupLoading: false, signupError: '' });
     console.log('OK');
     signup(props);
   };

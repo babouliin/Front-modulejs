@@ -9,15 +9,15 @@ const PageOne = () => {
 
   // useEffect(() => setState(isLogin()), [props]);
 
-  const OneUserDiscusion = (element) => (
-    <li className="person" data-chat={element.id}>
+  const OneUserDiscusion = (id, status, name, time) => (
+    <li className="person" data-chat={id}>
       <div className="user">
         <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin" />
-        <span className={element.status} />
+        <span className={status} />
       </div>
       <p className="name-time">
-        <span className="name">{element.name}</span>
-        <span className="time">{element.time}</span>
+        <span className="name">{name}</span>
+        <span className="time">{time}</span>
       </p>
     </li>
   );
@@ -26,8 +26,8 @@ const PageOne = () => {
     const discussionTable = [];
 
     if (AllUserDiscussion) {
-      AllUserDiscussion.forEach((element) => {
-        discussionTable.push(OneUserDiscusion(element));
+      AllUserDiscussion.forEach((id, status, name, time) => {
+        discussionTable.push(OneUserDiscusion(id, status, name, time));
       });
     }
 
@@ -38,17 +38,17 @@ const PageOne = () => {
     );
   };
 
-  const oneMessage = (element) => (
-    <li className={element.isRespond ? 'chat-left' : 'chat-right'}>
+  const oneMessage = (isRespond, name, message, hour) => (
+    <li className={isRespond ? 'chat-left' : 'chat-right'}>
       <div className="chat-avatar">
         <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin" />
-        <div className="chat-name">{element.name}</div>
+        <div className="chat-name">{name}</div>
       </div>
       <div className="chat-text">
-        {element.message}
+        {message}
       </div>
       <div className="chat-hour">
-        {element.hour}
+        {hour}
         <span className="fa fa-check-circle" />
       </div>
     </li>
@@ -58,8 +58,8 @@ const PageOne = () => {
     const messageTable = [];
 
     if (AllMessage) {
-      AllMessage.forEach((element) => {
-        messageTable.push(oneMessage(element));
+      AllMessage.forEach((isRespond, name, message, hour) => {
+        messageTable.push(oneMessage(isRespond, name, message, hour));
       });
     }
 

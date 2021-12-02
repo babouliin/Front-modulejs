@@ -22,10 +22,6 @@ const Header = (props) => {
           <Navbar.Text className="ml-3">
             <Link to="./profile">Profile</Link>
           </Navbar.Text>
-          <Navbar.Text>
-            Signed in as:
-            <a href="#login">Admin</a>
-          </Navbar.Text>
           <Navbar.Text className="ml-3">
             {state && <Link onClick={() => handleLogout()} to="/">Logout</Link>}
           </Navbar.Text>
