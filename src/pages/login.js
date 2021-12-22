@@ -1,14 +1,18 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import {
+  Form, Input, Button, message,
+} from 'antd';
 import {
   FormControl, Tabs, Tab, Spinner,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useCookies } from 'react-cookie';
 import Media from 'react-media';
 import Roules from '../util/rules';
 import { login, signup } from '../middleware/auth';
-import Layout from '../component/layout';
+import Layout from '../component/Layout';
+import APIAuth from '../API/APIAuth';
 
 const Login = (props) => {
   const [state, setState] = useState({
@@ -18,8 +22,6 @@ const Login = (props) => {
     loginError: '',
     loginStayLog: false,
     loginLoading: false,
-
-    // signup
 
     signupEmail: '',
     signupPseudo: '',
@@ -32,9 +34,10 @@ const Login = (props) => {
     signupPasswordError: '',
     signupPasswordConfirmationError: '',
     signupError: '',
-    // END signup
 
   });
+  const { t } = useTranslation();
+  const [cookies, setCookie] = useCookies(['user']);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +47,7 @@ const Login = (props) => {
     }));
   };
 
-  const loginErr = () => {
+  const loginErr = async () => {
     let invalid = false;
     let error = '';
     const { loginEmail, loginPassword } = state;
@@ -55,16 +58,16 @@ const Login = (props) => {
     console.log(loginPassword);
 
     if (!loginEmail || loginEmail.length === 0) {
-      error = "L'adresse e-mail est requise";
+      error = t('errorWithoutEmail');
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(loginEmail)) {
-      error = 'Les identifiants de connection ne sont pas valides';
+      error = t('errorLoginInvalid');
       invalid = true;
     } else if (!loginPassword || loginPassword.length === 0) {
-      error = 'Le mot de passe est requis';
+      error = t('errorWithoutPassword');
       invalid = true;
     } else if (loginPassword.length < 8 || !/\d/.test(loginPassword) || !/[a-zA-Z]/.test(loginPassword)) {
-      error = 'Les identifiants de connection ne sont pas valides';
+      error = t('errorLoginInvalid');
       invalid = true;
     } else {
       error = '';
@@ -78,7 +81,16 @@ const Login = (props) => {
     localStorage.setItem('email', loginEmail);
     setState({ ...state, loginError: '', loginLoading: false });
     console.log('OK');
-    login(props);
+
+    const loginReturn = await APIAuth.login(loginEmail, loginPassword);
+    const { data } = loginReturn;
+    if (loginReturn.status === 200) {
+      console.log(data.token);
+      setCookie('Token', data.token, { path: '/' });
+      login(props);
+    } else {
+      message.error(`Login Failed ${data.message}`);
+    }
   };
 
   const handleLoginInput = (target) => {
@@ -93,14 +105,15 @@ const Login = (props) => {
     return (
       <div className="p-4">
         <div className="form-group">
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
           <label htmlFor="emailLogin" className="mt-2">
-            Adresse e-mail
+            {t('email')}
             <span id="emailLogin" style={{ color: 'red' }}>*</span>
           </label>
           <FormControl
             name="loginEmail"
             value={state.loginEmail}
-            placeholder="Entrez votre adresse e-mail"
+            placeholder={t('placeHolderEmail')}
             onChange={handleChange}
             type="email"
             className={loginError && loginError.length !== 0
@@ -112,14 +125,15 @@ const Login = (props) => {
             {loginError}
           </div>
 
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
           <label htmlFor="passLogin" className="mt-2">
-            Mot de passe
+            {t('password')}
             <span id="passLogin" style={{ color: 'red' }}>*</span>
           </label>
           <FormControl
             name="loginPassword"
             value={state.loginPassword}
-            placeholder="Entrez votre mot de passe"
+            placeholder={t('placeHolderPassword')}
             onChange={handleChange}
             type="password"
             className="form-control form-control-user"
@@ -131,9 +145,9 @@ const Login = (props) => {
           {loginLoading
             ? (
               <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
+                <span className="sr-only">{t('loadingWaiting')}</span>
               </Spinner>
-            ) : 'Je me connecte'}
+            ) : t('iLogin')}
         </Button>
       </div>
     );
@@ -143,51 +157,46 @@ const Login = (props) => {
 
   // -------------------- SIGNUP -------------------- //
 
-  const signupErr = () => {
+  const signupErr = async () => {
     let invalid = false;
-    setState({ ...state, signupLoading: true });
     const {
       signupEmail, signupPseudo, signupPassword, signupPasswordConfirmation,
     } = state;
 
-    console.log('signup');
-    console.log(signupEmail);
-    console.log(signupPseudo);
-    console.log(signupPassword);
-    console.log(signupPasswordConfirmation);
+    setState({ ...state, signupLoading: true });
 
     if (!signupEmail || signupEmail.length === 0) {
-      setState({ ...state, signupEmailError: 'L\'adresse e-mail est requise' });
+      setState({ ...state, signupEmailError: t('errorWithoutEmail') });
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(signupEmail)) {
-      setState({ ...state, signupEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
+      setState({ ...state, signupEmailError: t('errorEmailNotValid') });
       invalid = true;
     } else {
       setState({ ...state, signupEmailError: '' });
     }
 
     if (!signupPseudo || signupPseudo.length === 0) {
-      setState({ ...state, signupPseudoError: 'Le pseudo est requis' });
+      setState({ ...state, signupPseudoError: t('errorWithoutPseudo') });
       invalid = true;
     } else if (signupPseudo.length < 4) {
-      setState({ ...state, signupPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
+      setState({ ...state, signupPseudoError: t('errorPseudoNotValid') });
       invalid = true;
     } else {
       setState({ ...state, signupPseudoError: '' });
     }
 
     if (!signupPassword || signupPassword.length === 0) {
-      setState({ ...state, signupPasswordError: 'Un mot de passe est requis' });
+      setState({ ...state, signupPasswordError: t('errorWithoutPassword') });
       invalid = true;
     } else if (signupPassword.length < 8 || !/\d/.test(signupPassword) || !/[a-zA-Z]/.test(signupPassword)) {
-      setState({ ...state, signupPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
+      setState({ ...state, signupPasswordError: t('errorPasswordNotValid') });
       invalid = true;
     } else {
       setState({ ...state, signupPasswordError: '' });
     }
 
     if (signupPassword !== signupPasswordConfirmation) {
-      setState({ ...state, signupPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
+      setState({ ...state, signupPasswordConfirmationError: t('errorDifferentPassword') });
       invalid = true;
     } else {
       setState({ ...state, signupPasswordConfirmationError: '' });
@@ -201,7 +210,16 @@ const Login = (props) => {
     localStorage.setItem('email', signupEmail);
     setState({ ...state, signupLoading: false, signupError: '' });
     console.log('OK');
-    signup(props);
+
+    const signupReturn = await APIAuth.signup(signupEmail, signupPassword, signupPseudo);
+    const { data } = signupReturn;
+    if (signupReturn.status === 201) {
+      console.log(data.token);
+      setCookie('Token', data.token, { path: '/' });
+      signup(props);
+    } else {
+      message.error(`Signup Failed ${data.message}`);
+    }
   };
 
   const signupTextBox = () => {
@@ -220,6 +238,7 @@ const Login = (props) => {
       <div>
         <div className="row">
           <div className="col-6">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="pseudoSign" className="mt-2">
               Pseudo
               <span id="pseudoSign" style={{ color: 'red' }}>*</span>
@@ -227,7 +246,7 @@ const Login = (props) => {
             <FormControl
               name="signupPseudo"
               value={state.signupPseudo}
-              placeholder="Entrez votre pseudo"
+              placeholder={t('placeHolderPseudo')}
               onChange={handleChange}
               type="name"
               className={signupPseudoError && signupPseudoError.length !== 0
@@ -240,14 +259,15 @@ const Login = (props) => {
           </div>
         </div>
 
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
         <label htmlFor="emailSign" className="mt-2">
-          Adresse e-mail
+          {t('email')}
           <span id="emailSign" style={{ color: 'red' }}>*</span>
         </label>
         <FormControl
           name="signupEmail"
           value={state.signupEmail}
-          placeholder="Entrez votre adresse e-mail"
+          placeholder={t('placeHolderEmail')}
           onChange={handleChange}
           type="email"
           className={signupEmailError && signupEmailError.length !== 0
@@ -258,14 +278,15 @@ const Login = (props) => {
           {signupEmailError}
         </div>
 
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
         <label htmlFor="passSign" className="mt-2">
-          Mot de passe
+          {t('password')}
           <span id="passSign" style={{ color: 'red' }}>*</span>
         </label>
         <FormControl
           name="signupPassword"
           value={state.signupPassword}
-          placeholder="Entrez votre mot de passe"
+          placeholder={t('placeHolderPassword')}
           onChange={handleChange}
           type="password"
           className={signupPasswordError && signupPasswordError.length !== 0
@@ -276,14 +297,15 @@ const Login = (props) => {
           {signupPasswordError}
         </div>
 
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
         <label htmlFor="passconfSign" className="mt-2">
-          Confirmation du mot de passe
+          {t('confPassword')}
           <span id="passconfSign" style={{ color: 'red' }}>*</span>
         </label>
         <FormControl
           name="signupPasswordConfirmation"
           value={state.signupPasswordConfirmation}
-          placeholder="Confirmez votre mot de passe"
+          placeholder={t('placeHolderPasswrdConfirm')}
           onChange={handleChange}
           type="password"
           className={signupPasswordConfirmationError && signupPasswordConfirmationError.length !== 0
@@ -298,9 +320,9 @@ const Login = (props) => {
           {signupLoading
             ? (
               <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
+                <span className="sr-only">{t('loadingWaiting')}</span>
               </Spinner>
-            ) : 'Je m inscrit' }
+            ) : t('iSignup') }
         </Button>
         <div className="invalid-feedback text-center">
           {signupError}
@@ -310,17 +332,6 @@ const Login = (props) => {
   };
 
   // -------------------- SIGNUP END -------------------- //
-
-  // // LOGIN SUCCESS
-  // const onFinish = (values) => {
-  //   console.log('Success: ', values);
-  //   login(props, values);
-  // };
-
-  // // LOGIN FAILED
-  // const onFinishFailed = (errorInfo) => {
-  //   console.log('Failed:', errorInfo);
-  // };
 
   return (
     <Layout className="app-login" isHeader>
@@ -338,10 +349,10 @@ const Login = (props) => {
               && (
                 <div className="col-12 p-4" style={{ maxHeight: 'inherit' }}>
                   <Tabs fill defaultActiveKey="login" id="uncontrolled-tab-example" style={{ maxHeight: 'inherit', marginTop: '70px' }}>
-                    <Tab eventKey="login" title="Se connecter">
+                    <Tab eventKey="login" title={t('login')}>
                       {loginTextBox()}
                     </Tab>
-                    <Tab eventKey="signup" title="S'inscrire">
+                    <Tab eventKey="signup" title={t('signup')}>
                       {signupTextBox()}
                     </Tab>
                   </Tabs>
@@ -351,10 +362,10 @@ const Login = (props) => {
               && (
                 <div className="col-6 p-4" style={{ maxHeight: '100%', overflowY: 'auto' }}>
                   <Tabs fill defaultActiveKey="login" id="uncontrolled-tab-example" style={{ marginTop: '70px' }}>
-                    <Tab eventKey="login" title="Se connecter" style={{ maxHeight: 'inherit' }}>
+                    <Tab eventKey="login" title={t('login')} style={{ maxHeight: 'inherit' }}>
                       {loginTextBox()}
                     </Tab>
-                    <Tab eventKey="signup" title="S'inscrire">
+                    <Tab eventKey="signup" title={t('signup')}>
                       {signupTextBox()}
                     </Tab>
                   </Tabs>
@@ -364,33 +375,6 @@ const Login = (props) => {
           )}
         </Media>
       </div>
-      {/* <Form
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        layout="vertical"
-      >
-        <Form.Item
-          name="username"
-          type="text"
-          rules={Roules.text}
-        >
-          <Input placeholder="Username" autoComplete="off" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          type="password"
-          rules={Roules.password}
-        >
-          <Input.Password placeholder="Password" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Sign in
-          </Button>
-        </Form.Item>
-      </Form> */}
     </Layout>
 
   );

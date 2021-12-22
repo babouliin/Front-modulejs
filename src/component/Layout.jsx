@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Header from './header';
+import Header from './Header';
 
 const Layout = ({ className, isHeader, children }) => (
 

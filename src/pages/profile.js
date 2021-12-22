@@ -1,29 +1,30 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import {
   FormControl, Tabs, Tab, Spinner,
 } from 'react-bootstrap';
-import Layout from '../component/layout';
+import { useTranslation } from 'react-i18next';
+import Layout from '../component/Layout';
 import '../assets/scss/pages/_profile.css';
 
 const Profile = () => {
   const [state, setState] = useState({
 
-    profilEmail: '',
-    profilPseudo: '',
-    profilPassword: '',
-    profilPasswordConfirmation: '',
-    profilLoading: false,
+    profileEmail: '',
+    profilePseudo: '',
+    profilePassword: '',
+    profilePasswordConfirmation: '',
+    profileLoading: false,
 
-    profilEmailError: '',
-    profilPseudoError: '',
-    profilPasswordError: '',
-    profilPasswordConfirmationError: '',
-    profilError: '',
+    profileEmailError: '',
+    profilePseudoError: '',
+    profilePasswordError: '',
+    profilePasswordConfirmationError: '',
+    profileError: '',
 
   });
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,174 +34,178 @@ const Profile = () => {
     }));
   };
 
-  const profilErr = () => {
+  const profileErr = () => {
     let invalid = false;
-    setState({ ...state, prfilLoading: true });
+    setState({ ...state, profileLoading: true });
     const {
-      profilEmail, profilPseudo, profilPassword, profilPasswordConfirmation,
+      profileEmail, profilePseudo, profilePassword, profilePasswordConfirmation,
     } = state;
 
-    console.log('profil');
-    console.log(profilEmail);
-    console.log(profilPseudo);
-    console.log(profilPassword);
-    console.log(profilPasswordConfirmation);
+    console.log('profile');
+    console.log(profileEmail);
+    console.log(profilePseudo);
+    console.log(profilePassword);
+    console.log(profilePasswordConfirmation);
 
-    if (!profilEmail || profilEmail.length === 0) {
-      setState({ ...state, profilEmailError: 'L\'adresse e-mail est requise' });
+    if (!profileEmail || profileEmail.length === 0) {
+      setState({ ...state, profileEmailError: t('errorWithoutEmail') });
       invalid = true;
-    } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(profilEmail)) {
-      setState({ ...state, profilEmailError: 'L\'adresse e-mail n\'est pas valide : nom@dommaine.com' });
+    } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(profileEmail)) {
+      setState({ ...state, profileEmailError: t('errorEmailNotValid') });
       invalid = true;
     } else {
-      setState({ ...state, profilEmailError: '' });
+      setState({ ...state, profileEmailError: '' });
     }
 
-    if (!profilPseudo || profilPseudo.length === 0) {
-      setState({ ...state, profilPseudoError: 'Le pseudo est requis' });
+    if (!profilePseudo || profilePseudo.length === 0) {
+      setState({ ...state, profilePseudoError: t('errorWithoutPseudo') });
       invalid = true;
-    } else if (profilPseudo.length < 4) {
-      setState({ ...state, profilPseudoError: 'Le pseudo doit faire plus de 4 charactères' });
+    } else if (profilePseudo.length < 4) {
+      setState({ ...state, profilePseudoError: t('errorPseudoNotValid') });
       invalid = true;
     } else {
-      setState({ ...state, profilPseudoError: '' });
+      setState({ ...state, profilePseudoError: '' });
     }
 
-    if (!profilPassword || profilPassword.length === 0) {
-      setState({ ...state, profilPasswordError: 'Un mot de passe est requis' });
+    if (!profilePassword || profilePassword.length === 0) {
+      setState({ ...state, profilePasswordError: t('errorWithoutPassword') });
       invalid = true;
-    } else if (profilPassword.length < 8 || !/\d/.test(profilPassword) || !/[a-zA-Z]/.test(profilPassword)) {
-      setState({ ...state, profilPasswordError: 'Le mot de passe doit contenir au minimum 8 caractères dont une lettre et un chiffre' });
+    } else if (profilePassword.length < 8 || !/\d/.test(profilePassword) || !/[a-zA-Z]/.test(profilePassword)) {
+      setState({ ...state, profilePasswordError: t('errorPasswordNotValid') });
       invalid = true;
     } else {
-      setState({ ...state, profilPasswordError: '' });
+      setState({ ...state, profilePasswordError: '' });
     }
 
-    if (profilPassword !== profilPasswordConfirmation) {
-      setState({ ...state, profilPasswordConfirmationError: 'Les mots de passes ne correspondent pas' });
+    if (profilePassword !== profilePasswordConfirmation) {
+      setState({ ...state, profilePasswordConfirmationError: t('errorDifferentPassword') });
       invalid = true;
     } else {
-      setState({ ...state, profilPasswordConfirmationError: '' });
+      setState({ ...state, profilePasswordConfirmationError: '' });
     }
 
     if (invalid) {
-      setState({ ...state, profilLoading: false });
+      setState({ ...state, profileLoading: false });
       return;
     }
 
-    localStorage.setItem('email', profilEmail);
-    setState({ ...state, profilLoading: false, profilError: '' });
+    localStorage.setItem('email', profileEmail);
+    setState({ ...state, profileLoading: false, profileError: '' });
     console.log('OK');
-    // profil(props);
+    // profile(props);
   };
 
-  const profilTextBox = () => {
+  const profileTextBox = () => {
     const {
-      profilEmail, profilPseudo, profilPassword, profilPasswordConfirmation, profilLoading,
+      profileEmail, profilePseudo, profilePassword, profilePasswordConfirmation, profileLoading,
     } = state;
     const {
-      profilEmailError,
-      profilPseudoError,
-      profilPasswordError,
-      profilPasswordConfirmationError,
-      profilError,
+      profileEmailError,
+      profilePseudoError,
+      profilePasswordError,
+      profilePasswordConfirmationError,
+      profileError,
     } = state;
 
     return (
       <div className="card-body">
         <div className="row gutters">
           <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <h6 className="mb-2 text-primary">Personal Details</h6>
+            <h6 className="mb-2 text-primary">{t('personalDetails')}</h6>
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="pseudoSign" className="mt-2">
               Pseudo
               <span id="pseudoSign" style={{ color: 'red' }}>*</span>
             </label>
             <FormControl
-              name="profilPseudo"
-              value={state.profilPseudo}
-              placeholder="Entrez votre pseudo"
+              name="profilePseudo"
+              value={state.profilePseudo}
+              placeholder={t('placeHolderPseudo')}
               onChange={handleChange}
               type="email"
-              className={profilPseudoError && profilPseudoError.length !== 0
+              className={profilePseudoError && profilePseudoError.length !== 0
                 ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
               style={{ borderRadius: '20px 20px 20px 20px' }}
             />
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="emailSign" className="mt-2">
-              Adresse e-mail
+              {t('email')}
               <span id="emailSign" style={{ color: 'red' }}>*</span>
             </label>
             <FormControl
-              name="profilEmail"
-              value={state.profilEmail}
-              placeholder="Entrez votre adresse e-mail"
+              name="profileEmail"
+              value={state.profileEmail}
+              placeholder={t('placeHolderEmail')}
               onChange={handleChange}
               type="email"
-              className={profilEmailError && profilEmailError.length !== 0
+              className={profileEmailError && profileEmailError.length !== 0
                 ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
               style={{ borderRadius: '20px 20px 20px 20px' }}
             />
             <div className="invalid-feedback">
-              {profilEmailError}
+              {profileEmailError}
             </div>
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="passSign" className="mt-2">
-              Mot de passe
+              {t('password')}
               <span id="passSign" style={{ color: 'red' }}>*</span>
             </label>
             <FormControl
-              name="profilPassword"
-              value={state.profilPassword}
-              placeholder="Entrez votre mot de passe"
+              name="profilePassword"
+              value={state.profilePassword}
+              placeholder={t('placeHolderPassword')}
               onChange={handleChange}
               type="password"
-              className={profilPasswordError && profilPasswordError.length !== 0
+              className={profilePasswordError && profilePasswordError.length !== 0
                 ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
               style={{ borderRadius: '20px 20px 20px 20px' }}
             />
             <div className="invalid-feedback">
-              {profilPasswordError}
+              {profilePasswordError}
             </div>
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="passconfSign" className="mt-2">
-              Confirmation du mot de passe
+              {t('confPassword')}
               <span id="passconfSign" style={{ color: 'red' }}>*</span>
             </label>
             <FormControl
-              name="profilPasswordConfirmation"
-              value={state.profilPasswordConfirmation}
-              placeholder="Confirmez votre mot de passe"
+              name="profilePasswordConfirmation"
+              value={state.profilePasswordConfirmation}
+              placeholder={t('placeHolderPasswrdConfirm')}
               onChange={handleChange}
               type="password"
-              className={profilPasswordConfirmationError
-                && profilPasswordConfirmationError.length !== 0
+              className={profilePasswordConfirmationError
+                && profilePasswordConfirmationError.length !== 0
                 ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
               style={{ borderRadius: '20px 20px 20px 20px' }}
             />
             <div className="invalid-feedback">
-              {profilPasswordConfirmationError}
+              {profilePasswordConfirmationError}
             </div>
           </div>
         </div>
         <div className="row gutters">
           <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-4">
             <div className="text-right">
-              <button type="button" id="submit" name="submit" className="btn btn-secondary">Cancel</button>
-              <Button onClick={profilErr} type="button" id="submit" name="submit" className="btn btn-primary" style={{ backgroundColor: '#254E70' }}>
-                {profilLoading
+              <button type="button" id="submit" name="submit" className="btn btn-secondary">{t('cancel')}</button>
+              <Button onClick={profileErr} type="button" id="submit" name="submit" className="btn btn-primary" style={{ backgroundColor: '#254E70' }}>
+                {profileLoading
                   ? (
                     <Spinner animation="border" role="status">
-                      <span className="sr-only">Loading...</span>
+                      <span className="sr-only">{t('loadingWaiting')}</span>
                     </Spinner>
-                  ) : 'Update' }
+                  ) : t('update') }
               </Button>
               <div className="invalid-feedback text-center">
-                {profilError}
+                {profileError}
               </div>
             </div>
           </div>
@@ -225,7 +230,7 @@ const Profile = () => {
                     <h6 className="user-email">yuki@Maxwell.com</h6>
                   </div>
                   <div className="about">
-                    <h5>About</h5>
+                    <h5>{t('about')}</h5>
                     <p>I&apos;m Yuki. Full Stack Designer I enjoy creating user-centric,</p>
                     <p> delightful and human experiences.</p>
                   </div>
@@ -235,7 +240,7 @@ const Profile = () => {
           </div>
           <div className="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
             <div className="card">
-              {profilTextBox()}
+              {profileTextBox()}
             </div>
           </div>
         </div>

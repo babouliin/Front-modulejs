@@ -1,15 +1,16 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
-import Layout from '../component/layout';
+import { useTranslation } from 'react-i18next';
+import Layout from '../component/Layout';
 import '../assets/scss/pages/_page-1.css';
 
 const PageOne = () => {
   const [AllUserDiscussion] = useState([]);
   const [AllMessage] = useState([]);
+  const { t } = useTranslation();
 
   // useEffect(() => setState(isLogin()), [props]);
 
-  const OneUserDiscusion = (id, status, name, time) => (
+  const OneUserDiscussion = (id, status, name, time) => (
     <li className="person" data-chat={id}>
       <div className="user">
         <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin" />
@@ -27,7 +28,7 @@ const PageOne = () => {
 
     if (AllUserDiscussion) {
       AllUserDiscussion.forEach((id, status, name, time) => {
-        discussionTable.push(OneUserDiscusion(id, status, name, time));
+        discussionTable.push(OneUserDiscussion(id, status, name, time));
       });
     }
 
@@ -76,7 +77,7 @@ const PageOne = () => {
             {messageTable}
           </ul>
           <div className="form-group mt-3 mb-0">
-            <textarea className="form-control" rows="3" placeholder="Type your message here..." />
+            <textarea className="form-control" rows="3" placeholder={t('enterYourMessage')} />
           </div>
         </div>
       </div>
@@ -104,7 +105,7 @@ const PageOne = () => {
                     <div className="users-container">
                       <div className="chat-search-box">
                         <div className="input-group">
-                          <input className="form-control" placeholder="Search" />
+                          <input className="form-control" placeholder={t('search')} />
                           <div className="input-group-btn">
                             <button type="button" className="btn btn-info">
                               <i className="fa fa-search" />

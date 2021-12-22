@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import Layout from '../component/layout';
+import Layout from '../component/Layout';
 
 const PageTwo = () => (
   <Layout className="app-camearadetails" isHeader>
