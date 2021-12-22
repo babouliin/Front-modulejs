@@ -6,7 +6,7 @@ import i18n from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 import { logout, isLogin } from '../middleware/auth';
-import { updateHeaders } from '../API/APIAuth';
+import updateHeaders from '../API/APIHeader';
 import '../translations/i18n';
 
 const Header = (props) => {

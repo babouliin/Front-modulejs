@@ -1,14 +1,10 @@
 import {
   React, useCallback,
 } from 'react';
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import Layout from './Layout';
 import UserDiscussionsSelector from '../store/UserDiscussionsSelector';
 import deleteUserDiscussion from '../store/UserDiscussionsAction';
-import AddUserDiscussion from './AddUserDiscussion';
-import ExampleComponent from './ExampleComponent';
 
 function UserDiscussionItem({ userDiscussion, onDelete }) {
   return (
@@ -60,14 +56,7 @@ function UserDiscussionsListStore() {
     dispatch(deleteUserDiscussion(userDiscussion));
   }, [dispatch]);
   return (
-    <Layout className="app-camearadetails" isHeader>
-      <h1>Welcome to Home Two</h1>
-      <Link to="/home">Home</Link>
-      <Link to="/page-1" className="ml-3">Page_One</Link>
-      <ExampleComponent />
-      <UserDiscussionsList userDiscussions={userDiscussions} onDelete={onDelete} />
-      <AddUserDiscussion />
-    </Layout>
+    <UserDiscussionsList userDiscussions={userDiscussions} onDelete={onDelete} />
   );
 }
 

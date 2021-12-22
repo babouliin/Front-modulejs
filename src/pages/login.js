@@ -13,6 +13,7 @@ import Roules from '../util/rules';
 import { login, signup } from '../middleware/auth';
 import Layout from '../component/Layout';
 import APIAuth from '../API/APIAuth';
+import { updateHeadersToken } from '../API/APIHeader';
 
 const Login = (props) => {
   const [state, setState] = useState({
@@ -87,6 +88,7 @@ const Login = (props) => {
     if (loginReturn.status === 200) {
       console.log(data.token);
       setCookie('Token', data.token, { path: '/' });
+      updateHeadersToken(data.token);
       login(props);
     } else {
       message.error(`Login Failed ${data.message}`);
@@ -216,6 +218,7 @@ const Login = (props) => {
     if (signupReturn.status === 201) {
       console.log(data.token);
       setCookie('Token', data.token, { path: '/' });
+      updateHeadersToken(data.token);
       signup(props);
     } else {
       message.error(`Signup Failed ${data.message}`);

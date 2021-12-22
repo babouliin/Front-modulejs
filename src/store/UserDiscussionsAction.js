@@ -1,9 +1,9 @@
 import wait from '../wait';
-import { ADD_USER_DISCUSSION, DELETE_USER_DISCUSSION } from './UserDiscussionsReducer';
+import { ADD_USER_DISCUSSION, DELETE_USER_DISCUSSION, UPDATE_USER_DISCUSSION } from './UserDiscussionsReducer';
 
-const deleteUserDiscussion = (userDiscussion) => ({
-  type: DELETE_USER_DISCUSSION,
-  payload: userDiscussion.id,
+export const updateUserDiscussion = (userDiscussions) => ({
+  type: UPDATE_USER_DISCUSSION,
+  payload: userDiscussions,
 });
 
 export const addUserDiscussion = (name) => async (dispatch) => {
@@ -13,5 +13,10 @@ export const addUserDiscussion = (name) => async (dispatch) => {
     payload: { name },
   });
 };
+
+const deleteUserDiscussion = (userDiscussion) => ({
+  type: DELETE_USER_DISCUSSION,
+  payload: userDiscussion.id,
+});
 
 export default deleteUserDiscussion;

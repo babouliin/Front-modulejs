@@ -1,14 +1,7 @@
 import axios from 'axios';
+import { headers } from './APIHeader';
 
-const headers = {
-  'Content-Type': 'application/json',
-  'Accept-Language': 'en',
-};
 const burl = process.env.REACT_APP_API_URL;
-
-export function updateHeaders(lang) {
-  headers['Accept-Language'] = lang;
-}
 
 const exportedObject = {
   login(email, password) {
@@ -29,7 +22,6 @@ const exportedObject = {
     }, { headers })
       .catch((error) => error.response);
   },
-
 };
 
 export default exportedObject;
