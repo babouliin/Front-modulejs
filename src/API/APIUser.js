@@ -10,7 +10,15 @@ const exportedObject = {
       { headers },
     ).catch((error) => error.response);
   },
-  user(pseudo, password) {
+
+  getUser() {
+    return axios.get(
+      `${burl}/user`,
+      { headers },
+    ).catch((error) => error.response);
+  },
+
+  updateUser(pseudo, password) {
     return axios.put(
       `${burl}/user`,
       {

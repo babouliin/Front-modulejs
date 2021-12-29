@@ -67,6 +67,11 @@ function AddChannelMessage() {
         <textarea ref={textarea} className="form-control" rows="3" placeholder={t('enterYourMessage')} />
         {loading && t('loadingWaiting')}
       </div>
+      <div className="input-group-btn">
+        <button type="button" disabled={loading} onClick={handleSubmit} className="btn btn-info mt-3 mb-3 float-end">
+          <i className="fa fa-play" />
+        </button>
+      </div>
     </form>
   );
 }

@@ -375,3 +375,8 @@ ul {
     margin-bottom: 2rem;
     box-shadow: none;
 }
+
+.iconRed {
+    font-size: 22px;
+    color: Tomato;
+}

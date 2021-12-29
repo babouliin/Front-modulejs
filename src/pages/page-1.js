@@ -1,22 +1,41 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
+import { useCookies } from 'react-cookie';
+import PropTypes from 'prop-types';
 import Layout from '../component/Layout';
 import APIChat from '../API/APIChat';
 import APIMessage from '../API/APIMessage';
+import APIUser from '../API/APIUser';
 import ChannelMessageStore from '../component/ChannelMessage';
 import UserDiscussionsListStore from '../component/UserDiscussionsList';
+import AddUserDiscussion from '../component/AddUserDiscussion2';
 import { updateUserDiscussion } from '../store/UserDiscussionsAction';
 import { updateChannelMessage } from '../store/ChannelMessageAction';
+import socket from '../socket';
+import { logout } from '../middleware/auth';
+import updateUserList from '../store/UserListAction';
 
 import '../assets/scss/pages/_page-1.css';
 
 const PageOne = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [cookies, setCookie] = useCookies(['user']);
 
   const loadUserDiscussionsList = (async () => {
+    socket.query = { token: cookies.Token };
+    socket.on('chats', (chats) => {
+      console.log(chats);
+      chats.forEach((chat) => {
+        // user.self = user.userID === socket.id;
+        // initReactiveProperties(user);
+        console.log(chat);
+      });
+    });
+
     const chatReturn = await APIChat.chats();
     const { data } = chatReturn;
     if (chatReturn.status === 200) {
@@ -27,9 +46,8 @@ const PageOne = () => {
     }
   });
 
-  // eslint-disable-next-line no-unused-vars
-  const loadChannelMessage = (async () => {
-    const messageReturn = await APIMessage.messages();
+  const loadChannelMessage = (async (chatId) => {
+    const messageReturn = await APIMessage.messages(chatId);
     const { data } = messageReturn;
     if (messageReturn.status === 200) {
       console.log(data);
@@ -39,10 +57,42 @@ const PageOne = () => {
     }
   });
 
-  // useEffect(() => setState(isLogin()), [props]);
+  const loadUserList = (async () => {
+    socket.query = { token: cookies.Token };
+    socket.on('users', (users) => {
+      console.log(users);
+      users.forEach((user) => {
+        // user.self = user.userID === socket.id;
+        // initReactiveProperties(user);
+        console.log(user);
+      });
+    });
 
-  loadUserDiscussionsList();
-  // loadChannelMessage();
+    const usersReturn = await APIUser.users();
+    const { data } = usersReturn;
+    if (usersReturn.status === 200) {
+      console.log(data.data);
+      await dispatch(updateUserList(data.data));
+    } else {
+      message.error(`Error ${data.message}`);
+    }
+  });
+
+  socket.on('connect_error', (err) => {
+    if (err.message === 'invalid username') {
+      socket.off('connect_error');
+      logout();
+    }
+  });
+
+  socket.query = { token: cookies.Token };
+  socket.on('session', (sessionId) => {
+    console.log(sessionId);
+  });
+
+  // loadUserDiscussionsList();
+  // loadChannelMessage(1);
+  // loadUserList();
 
   return (
     <Layout className="app-camearadetails" isHeader>
@@ -63,16 +113,7 @@ const PageOne = () => {
                 <div className="row no-gutters">
                   <div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
                     <div className="users-container">
-                      <div className="chat-search-box">
-                        <div className="input-group">
-                          <input className="form-control" placeholder={t('search')} />
-                          <div className="input-group-btn">
-                            <button type="button" className="btn btn-info">
-                              <i className="fa fa-search" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <AddUserDiscussion />
                       <UserDiscussionsListStore />
                     </div>
                   </div>

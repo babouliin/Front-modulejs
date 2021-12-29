@@ -13,8 +13,6 @@ const store = createStore(
     userList: UserListReducer,
     user: UserReducer,
     channelMessage: ChannelMessageReducer,
-    // eslint-disable-next-line no-unused-vars
-    filter: (state = 0, action) => state,
   }),
   composeWithDevTools(
     applyMiddleware(thunk),

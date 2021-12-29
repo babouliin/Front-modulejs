@@ -17,7 +17,11 @@ function UserDiscussionItem({ userDiscussion, onDelete }) {
         <span className="name">{userDiscussion.name}</span>
         <span className="time">{userDiscussion.time}</span>
       </p>
-      <button type="button" onClick={() => onDelete(userDiscussion)}>x</button>
+      <button className="btn float-end" type="button" onClick={() => onDelete(userDiscussion)}>
+        <span className="iconRed">
+          <i className="fa fa-minus-circle" />
+        </span>
+      </button>
     </li>
   );
 }
@@ -31,7 +35,6 @@ UserDiscussionItem.propTypes = {
 function UserDiscussionsList({ userDiscussions, onDelete }) {
   return (
     <ul className="users">
-      {/* eslint-disable-next-line react/prop-types */}
       {userDiscussions && userDiscussions.map((userDiscussion) => (
         <UserDiscussionItem
           userDiscussion={userDiscussion}
