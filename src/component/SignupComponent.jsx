@@ -100,7 +100,7 @@ const SignupComponent = (props) => {
       console.log(data.token);
       setCookie('Token', data.token, { path: '/' });
       updateHeadersToken(data.token);
-      socket.query = { token: `${data.token}` };
+      socket.auth = { token: `Bearer ${data.token}` };
       socket.connect();
       signup(props);
     } else {

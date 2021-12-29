@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import socket from '../socket';
 
 export const login = (props) => {
   props.history.push('/home');
@@ -12,6 +13,10 @@ export const signup = (props) => {
 
 export const logout = () => {
   localStorage.removeItem('email');
+  socket.off('connect_error');
+  socket.off('session');
+  // socket.disconnect();
+  socket.emit('disconnect', 'client namespace disconnect');
   message.success('Logout Success');
 };
 

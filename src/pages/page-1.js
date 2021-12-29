@@ -25,58 +25,58 @@ const PageOne = () => {
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['user']);
 
-  const loadUserDiscussionsList = (async () => {
-    socket.query = { token: cookies.Token };
-    socket.on('chats', (chats) => {
-      console.log(chats);
-      chats.forEach((chat) => {
-        // user.self = user.userID === socket.id;
-        // initReactiveProperties(user);
-        console.log(chat);
-      });
-    });
+  // const loadUserDiscussionsList = (async () => {
+  //   socket.query = { token: cookies.Token };
+  //   socket.on('chats', (chats) => {
+  //     console.log(chats);
+  //     chats.forEach((chat) => {
+  //       // user.self = user.userID === socket.id;
+  //       // initReactiveProperties(user);
+  //       console.log(chat);
+  //     });
+  //   });
 
-    const chatReturn = await APIChat.chats();
-    const { data } = chatReturn;
-    if (chatReturn.status === 200) {
-      console.log(data);
-      await dispatch(updateUserDiscussion(data));
-    } else {
-      message.error(`Error ${data.message}`);
-    }
-  });
+  //   const chatReturn = await APIChat.chats();
+  //   const { data } = chatReturn;
+  //   if (chatReturn.status === 200) {
+  //     console.log(data);
+  //     await dispatch(updateUserDiscussion(data));
+  //   } else {
+  //     message.error(`Error ${data.message}`);
+  //   }
+  // });
 
-  const loadChannelMessage = (async (chatId) => {
-    const messageReturn = await APIMessage.messages(chatId);
-    const { data } = messageReturn;
-    if (messageReturn.status === 200) {
-      console.log(data);
-      await dispatch(updateChannelMessage(data));
-    } else {
-      message.error(`Error ${data.message}`);
-    }
-  });
+  // const loadChannelMessage = (async (chatId) => {
+  //   const messageReturn = await APIMessage.messages(chatId);
+  //   const { data } = messageReturn;
+  //   if (messageReturn.status === 200) {
+  //     console.log(data);
+  //     await dispatch(updateChannelMessage(data));
+  //   } else {
+  //     message.error(`Error ${data.message}`);
+  //   }
+  // });
 
-  const loadUserList = (async () => {
-    socket.query = { token: cookies.Token };
-    socket.on('users', (users) => {
-      console.log(users);
-      users.forEach((user) => {
-        // user.self = user.userID === socket.id;
-        // initReactiveProperties(user);
-        console.log(user);
-      });
-    });
+  // const loadUserList = (async () => {
+  //   socket.query = { token: cookies.Token };
+  //   socket.on('users', (users) => {
+  //     console.log(users);
+  //     users.forEach((user) => {
+  //       // user.self = user.userID === socket.id;
+  //       // initReactiveProperties(user);
+  //       console.log(user);
+  //     });
+  //   });
 
-    const usersReturn = await APIUser.users();
-    const { data } = usersReturn;
-    if (usersReturn.status === 200) {
-      console.log(data.data);
-      await dispatch(updateUserList(data.data));
-    } else {
-      message.error(`Error ${data.message}`);
-    }
-  });
+  //   const usersReturn = await APIUser.users();
+  //   const { data } = usersReturn;
+  //   if (usersReturn.status === 200) {
+  //     console.log(data.data);
+  //     await dispatch(updateUserList(data.data));
+  //   } else {
+  //     message.error(`Error ${data.message}`);
+  //   }
+  // });
 
   socket.on('connect_error', (err) => {
     if (err.message === 'invalid username') {
@@ -85,14 +85,15 @@ const PageOne = () => {
     }
   });
 
-  socket.query = { token: cookies.Token };
+  socket.auth = { token: `Bearer ${cookies.Token}` };
   socket.on('session', (sessionId) => {
-    console.log(sessionId);
+    console.log(sessionId.sessionId);
+    // setCookie('SessionId', sessionId.sessionId, { path: '/' });
   });
 
+  // loadUserList();
   // loadUserDiscussionsList();
   // loadChannelMessage(1);
-  // loadUserList();
 
   return (
     <Layout className="app-camearadetails" isHeader>
