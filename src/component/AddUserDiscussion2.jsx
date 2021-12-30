@@ -34,7 +34,7 @@ function AddUserDiscussion() {
       <div className="input-group">
         <select className="form-select" aria-label="Default select example" value={optionSelected.optionSelected} onChange={handleChange}>
           <option key="0" value="0">...</option>
-          {userList && userList.map((user) => (
+          {userList.map((user) => (
             <option key={user.id} name={user.pseudo} value={user.id}>{user.pseudo}</option>
           ))}
         </select>

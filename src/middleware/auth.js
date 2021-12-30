@@ -12,15 +12,14 @@ export const signup = (props) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem('email');
-  socket.off('connect_error');
-  socket.off('session');
-  // socket.disconnect();
-  socket.emit('disconnect', 'client namespace disconnect');
+  localStorage.removeItem('token');
+  // socket.off('connect_error');
+  // socket.off('session');
+  socket.disconnect();
   message.success('Logout Success');
 };
 
 export const isLogin = () => {
-  if (localStorage.getItem('email')) return true;
+  if (localStorage.getItem('token')) return true;
   return false;
 };

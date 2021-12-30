@@ -8,7 +8,6 @@ import {
 import { withRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
-import socket from '../socket';
 import { signup } from '../middleware/auth';
 import APIAuth from '../API/APIAuth';
 import { updateHeadersToken } from '../API/APIHeader';
@@ -90,8 +89,6 @@ const SignupComponent = (props) => {
       return;
     }
 
-    localStorage.setItem('email', signupEmail);
-    setState({ ...state, signupLoading: false, signupError: '' });
     console.log('OK');
 
     const signupReturn = await APIAuth.signup(signupEmail, signupPassword, signupPseudo);
@@ -100,11 +97,12 @@ const SignupComponent = (props) => {
       console.log(data.token);
       setCookie('Token', data.token, { path: '/' });
       updateHeadersToken(data.token);
-      socket.auth = { token: `Bearer ${data.token}` };
-      socket.connect();
+      localStorage.setItem('token', data.token);
+      setState({ ...state, signupLoading: false, signupError: '' });
       signup(props);
     } else {
       message.error(`Signup Failed ${data.message}`);
+      setState({ ...state, signupLoading: false, signupError: '' });
     }
   };
 

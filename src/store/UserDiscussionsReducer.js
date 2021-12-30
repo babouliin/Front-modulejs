@@ -2,13 +2,13 @@ let id = 2;
 const initialState = [
   {
     id: 1,
-    name: 'Thomas',
+    pseudo: 'Thomas',
     status: 'status busy',
     time: '15/02/2019',
   },
   {
     id: 2,
-    name: 'Pierre',
+    pseudo: 'Pierre',
     status: 'status busy',
     time: '15/02/2019',
   },

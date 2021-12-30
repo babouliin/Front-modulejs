@@ -35,7 +35,7 @@ const Header = (props) => {
   return (
     <header>
       <Navbar>
-        <Link className="navbar-brand" to="/home">Brand Logo</Link>
+        <Link className="navbar-brand" to="/home">Module JS</Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Select
@@ -43,10 +43,13 @@ const Header = (props) => {
             onChange={handleChange}
             options={options}
           />
-          <Navbar.Text className="ml-3">
-            <Link to="./profile">
-              {t('profile')}
-            </Link>
+          <Navbar.Text className="p-3 ml-3">
+            {state
+              && (
+                <Link to="./profile">
+                  {t('profile')}
+                </Link>
+              )}
           </Navbar.Text>
           <Navbar.Text className="ml-3">
             {state

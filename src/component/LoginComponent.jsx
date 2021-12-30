@@ -8,7 +8,6 @@ import {
 import { withRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
-import socket from '../socket';
 import { login } from '../middleware/auth';
 import APIAuth from '../API/APIAuth';
 import { updateHeadersToken } from '../API/APIHeader';
@@ -62,8 +61,6 @@ const LoginComponent = (props) => {
       return;
     }
 
-    localStorage.setItem('email', loginEmail);
-    setState({ ...state, loginError: '', loginLoading: false });
     console.log('OK');
 
     const loginReturn = await APIAuth.login(loginEmail, loginPassword);
@@ -72,11 +69,12 @@ const LoginComponent = (props) => {
       console.log(data.token);
       setCookie('Token', data.token, { path: '/' });
       updateHeadersToken(data.token);
-      socket.auth = { token: `Bearer ${data.token}` };
-      socket.connect();
+      localStorage.setItem('token', data.token);
+      setState({ ...state, loginError: '', loginLoading: false });
       login(props);
     } else {
       message.error(`Login Failed ${data.message}`);
+      setState({ ...state, loginError: '', loginLoading: false });
     }
   };
 
@@ -127,7 +125,7 @@ const LoginComponent = (props) => {
         {state.loginLoading
           ? (
             <Spinner animation="border" role="status">
-              <span className="sr-only">{t('loadingWaiting')}</span>
+              <span className="sr-only" />
             </Spinner>
           ) : t('iLogin')}
       </Button>

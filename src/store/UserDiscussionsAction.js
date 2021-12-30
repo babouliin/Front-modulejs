@@ -6,11 +6,11 @@ export const updateUserDiscussion = (userDiscussions) => ({
   payload: userDiscussions,
 });
 
-export const addUserDiscussion = (name) => async (dispatch) => {
+export const addUserDiscussion = (pseudo) => async (dispatch) => {
   await wait(2000);
   dispatch({
     type: ADD_USER_DISCUSSION,
-    payload: { name },
+    payload: { pseudo },
   });
 };
 

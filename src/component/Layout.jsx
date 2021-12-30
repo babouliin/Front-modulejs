@@ -3,16 +3,19 @@ import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Header from './Header';
 
-const Layout = ({ className, isHeader, children }) => (
+const Layout = ({ className, isHeader, children }) => {
+  const nameClass = className !== undefined ? className : '';
 
-  <main className={`app-layout ${className !== undefined ? className : ''}`}>
-    {isHeader && <Header />}
-    <Container fluid>
-      {children}
-    </Container>
+  return (
+    <main className={`app-layout ${nameClass}`}>
+      {isHeader && <Header />}
+      <Container fluid>
+        {children}
+      </Container>
 
-  </main>
-);
+    </main>
+  );
+};
 
 Layout.propTypes = {
   className: PropTypes.string,

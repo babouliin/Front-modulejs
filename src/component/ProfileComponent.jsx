@@ -100,8 +100,6 @@ const ProfileComponent = () => {
       return;
     }
 
-    localStorage.setItem('email', profileEmail);
-    setState({ ...state, profileLoading: false, profileError: '' });
     console.log('OK');
 
     const userReturn = await APIUser.updateUser(profilePseudo, profilePassword);
@@ -113,6 +111,7 @@ const ProfileComponent = () => {
       message.error(`Update Failed ${data.message}`);
     }
     setEdit(false);
+    setState({ ...state, profileLoading: false, profileError: '' });
   };
 
   const profileTextBoxEdit = () => {
