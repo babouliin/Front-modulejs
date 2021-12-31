@@ -34,12 +34,16 @@ const Profile = () => {
 
   const loadUser = (async () => {
     const userReturn = await APIUser.getUser();
-    const { data } = userReturn;
-    if (userReturn.status === 200) {
-      console.log(data.data);
-      await dispatch(updateUser(data.data));
+    if (userReturn) {
+      const { data } = userReturn;
+      if (userReturn.status === 200) {
+        console.log(data.data);
+        await dispatch(updateUser(data.data));
+      } else {
+        message.error(`Error ${data.message}`);
+      }
     } else {
-      message.error(`Error ${data.message}`);
+      message.error('Connexion failed');
     }
   });
   loadUser();
@@ -104,15 +108,19 @@ const Profile = () => {
     console.log('OK');
 
     const userReturn = await APIUser.updateUser(profilePseudo, profilePassword);
-    const { data } = userReturn;
-    if (userReturn.status === 200) {
-      await dispatch(updateUser(data.data));
-      message.success('Update Success');
+    if (userReturn) {
+      const { data } = userReturn;
+      if (userReturn.status === 200) {
+        await dispatch(updateUser(data.data));
+        message.success('Update Success');
+      } else {
+        message.error(`Update Failed ${data.message}`);
+      }
+      setEdit(false);
+      setState({ ...state, profileLoading: false, profileError: '' });
     } else {
-      message.error(`Update Failed ${data.message}`);
+      message.error('Connexion failed');
     }
-    setEdit(false);
-    setState({ ...state, profileLoading: false, profileError: '' });
   };
 
   const profileTextBoxEdit = () => {

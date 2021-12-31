@@ -6,11 +6,11 @@ export const updateChannelMessage = (messages) => ({
   payload: messages,
 });
 
-const addChannelMessage = (name, message) => async (dispatch) => {
+const addChannelMessage = (pseudo, content) => async (dispatch) => {
   await wait(2000);
   dispatch({
     type: ADD_CHANNEL_MESSAGE,
-    payload: { name, message },
+    payload: { pseudo, content },
   });
 };
 

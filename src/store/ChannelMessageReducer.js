@@ -2,15 +2,15 @@ let id = 2;
 const initialState = [
   {
     id: 1,
-    name: 'Thomas',
-    message: 'Salut ca va ?',
+    pseudo: 'Thomas',
+    content: 'Salut ca va ?',
     hour: '10:23',
     isRespond: false,
   },
   {
     id: 2,
-    name: 'Pierre',
-    message: 'oui et toi ?',
+    pseudo: 'Pierre',
+    content: 'oui et toi ?',
     hour: '10:24',
     isRespond: true,
   },

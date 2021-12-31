@@ -64,16 +64,21 @@ const LoginComponent = (props) => {
     console.log('OK');
 
     const loginReturn = await APIAuth.login(loginEmail, loginPassword);
-    const { data } = loginReturn;
-    if (loginReturn.status === 200) {
-      console.log(data.token);
-      setCookie('Token', data.token, { path: '/' });
-      updateHeadersToken(data.token);
-      localStorage.setItem('token', data.token);
-      setState({ ...state, loginError: '', loginLoading: false });
-      login(props);
+    if (loginReturn) {
+      const { data } = loginReturn;
+      if (loginReturn.status === 200) {
+        console.log(data.token);
+        setCookie('Token', data.token, { path: '/' });
+        updateHeadersToken(data.token);
+        localStorage.setItem('token', data.token);
+        setState({ ...state, loginError: '', loginLoading: false });
+        login(props);
+      } else {
+        message.error(`Login Failed ${data.message}`);
+        setState({ ...state, loginError: '', loginLoading: false });
+      }
     } else {
-      message.error(`Login Failed ${data.message}`);
+      message.error('Connexion failed');
       setState({ ...state, loginError: '', loginLoading: false });
     }
   };

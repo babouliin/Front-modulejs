@@ -6,6 +6,7 @@ import UserDiscussionsReducer from './UserDiscussionsReducer';
 import UserListReducer from './UserListReducer';
 import UserReducer from './UserReducer';
 import ChannelMessageReducer from './ChannelMessageReducer';
+import MessageUserSelectedReducer from './MessageUserSelectedReducer';
 
 const store = createStore(
   combineReducers({
@@ -13,6 +14,7 @@ const store = createStore(
     userList: UserListReducer,
     user: UserReducer,
     channelMessage: ChannelMessageReducer,
+    messageUserSelected: MessageUserSelectedReducer,
   }),
   composeWithDevTools(
     applyMiddleware(thunk),

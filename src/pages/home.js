@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { message } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import Layout from '../component/Layout';
@@ -12,8 +12,9 @@ import APIUser from '../API/APIUser';
 import ChannelMessageStore from '../component/ChannelMessage';
 import UserDiscussionsListStore from '../component/UserDiscussionsList';
 import AddUserDiscussion from '../component/AddUserDiscussion2';
-import { updateUserDiscussion } from '../store/UserDiscussionsAction';
-import { updateChannelMessage } from '../store/ChannelMessageAction';
+import MessageUserSelectedSelector from '../store/MessageUserSelectedSelector';
+import { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussionsAction';
+import addChannelMessage, { updateChannelMessage } from '../store/ChannelMessageAction';
 import socket from '../socket';
 import { logout } from '../middleware/auth';
 import updateUserList from '../store/UserListAction';
@@ -24,6 +25,7 @@ const Home = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['user']);
+  const messageUserSelected = useSelector(MessageUserSelectedSelector);
 
   socket.auth = { token: `Bearer ${cookies.Token}` };
   socket.connect();
@@ -35,34 +37,35 @@ const Home = () => {
     }
   });
 
-  socket.auth = { token: `Bearer ${cookies.Token}` };
   socket.on('session', (sessionId) => {
     console.log(sessionId.sessionId);
     setCookie('SessionId', sessionId.sessionId, { path: '/' });
   });
 
   // LoadUsers
-  socket.auth = {
-    token: `Bearer ${cookies.Token}`,
-  };
-  socket.data = {
-    sessionId: `${cookies.SessionId}`,
-  };
   socket.on('users', async (users) => {
     console.log(users.users);
     await dispatch(updateUserList(users.users));
   });
 
   // LoadChats
-  socket.auth = {
-    token: `Bearer ${cookies.Token}`,
-  };
-  socket.data = {
-    sessionId: `${cookies.SessionId}`,
-  };
   socket.on('chats', async (chats) => {
     console.log(chats.chats);
     await dispatch(updateUserDiscussion(chats.chats));
+  });
+
+  socket.on('new chat', async (chat) => {
+    console.log('new chat');
+    console.log(chat);
+    await dispatch(addUserDiscussion(chat.id, chat.other_user.pseudo, chat.other_user.id));
+  });
+
+  socket.on('private message', async (mess) => {
+    console.log('private message');
+    console.log(mess);
+    if (mess.chat_id === messageUserSelected.chatId) {
+      await dispatch(addChannelMessage(messageUserSelected.pseudo, mess.content));
+    }
   });
 
   return (
