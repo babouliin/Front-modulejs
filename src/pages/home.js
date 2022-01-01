@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 import Layout from '../component/Layout';
 import APIMessage from '../API/APIMessage';
@@ -20,6 +21,7 @@ import '../assets/scss/pages/_page-1.css';
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [cookies, setCookie] = useCookies(['user']);
   const messageUserSelected = useSelector(MessageUserSelectedSelector);
 
