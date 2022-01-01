@@ -40,6 +40,9 @@ const TRANSLATIONS_EN = {
   chatTo: 'To: ',
   letsChat: 'Chat with your friends',
   jsModule: 'JS Module',
+  loginFailed: 'Login failed: ',
+  signUpFailed: 'Sign-Up failed: ',
+  serverUnreachable: 'The server is not reachable',
 };
 
 export default TRANSLATIONS_EN;

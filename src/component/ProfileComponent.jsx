@@ -40,10 +40,10 @@ const ProfileComponent = () => {
         console.log(data.data);
         await dispatch(updateUser(data.data));
       } else {
-        message.error(`Error ${data.message}`);
+        message.error(`${t('signUpFailed')} ${data.message}`);
       }
     } else {
-      message.error('Connexion failed');
+      message.error(t('serverUnreachable'));
     }
   });
 

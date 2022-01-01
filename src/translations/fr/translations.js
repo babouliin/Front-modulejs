@@ -40,7 +40,9 @@ const TRANSLATIONS_FR = {
   chatTo: 'Destinataire : ',
   letsChat: 'Discutez avec vos amis',
   jsModule: 'Module JS',
-
+  loginFailed: 'Echec de la connexion : ',
+  signUpFailed: 'Echec de l\'inscription : ',
+  serverUnreachable: 'Connexion au serveur impossible',
 };
 
 export default TRANSLATIONS_FR;
