@@ -10,7 +10,6 @@ export default function UserDiscussionsReducer(state = initialState, action) {
   let stateTemp = state;
   switch (action.type) {
     case ADD_USER_DISCUSSION:
-      // return ([...state, { ...action.payload }]);
       if (stateTemp && stateTemp.length > 0
       && stateTemp.filter((userDiscussion) => userDiscussion.other_user.id
       !== action.payload.other_user.id).length <= 0) {

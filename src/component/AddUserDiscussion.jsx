@@ -1,7 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { React, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addUserDiscussion } from '../store/UserDiscussionsAction';
+import { updateChannelMessage } from '../store/ChannelMessageAction';
+import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
 import UserListSelector from '../store/UserListSelector';
 
 function AddUserDiscussion() {
@@ -19,6 +20,12 @@ function AddUserDiscussion() {
     setLoading(true);
     if (state.optionSelected !== '0') {
       await dispatch(addUserDiscussion(null, state.optionNameSelected, state.optionSelected));
+      await dispatch(
+        updateMessageUserSelected(
+          null, state.optionSelected, state.optionNameSelected,
+        ),
+      );
+      await dispatch(updateChannelMessage([]));
     }
     setLoading(false);
     setState((prevState) => ({

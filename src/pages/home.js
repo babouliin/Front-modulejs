@@ -1,20 +1,17 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import PropTypes from 'prop-types';
 import Layout from '../component/Layout';
-import APIChat from '../API/APIChat';
 import APIMessage from '../API/APIMessage';
-import APIUser from '../API/APIUser';
 import ChannelMessageStore from '../component/ChannelMessage';
 import UserDiscussionsListStore from '../component/UserDiscussionsList';
 import AddUserDiscussion from '../component/AddUserDiscussion';
 import MessageUserSelectedSelector from '../store/MessageUserSelectedSelector';
-import deleteUserDiscussion, { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussionsAction';
+import { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussionsAction';
 import addChannelMessage, { updateChannelMessage } from '../store/ChannelMessageAction';
+import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
 import socket from '../socket';
 import { logout } from '../middleware/auth';
 import updateUserList from '../store/UserListAction';
@@ -22,7 +19,6 @@ import updateUserList from '../store/UserListAction';
 import '../assets/scss/pages/_page-1.css';
 
 const Home = () => {
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['user']);
   const messageUserSelected = useSelector(MessageUserSelectedSelector);
@@ -58,13 +54,35 @@ const Home = () => {
     console.log('new chat');
     console.log(chat);
     await dispatch(addUserDiscussion(chat.id, chat.other_user.pseudo, chat.other_user.id));
+    // if (chat.isEmitter) {
+    //   await dispatch(
+    //     updateMessageUserSelected(
+    //       chat.id, chat.other_user.id, chat.other_user.pseudo,
+    //     ),
+    //   );
+    //   const messagesReturn = await APIMessage.messages(chat.id);
+    //   if (messagesReturn) {
+    //     const { data } = messagesReturn;
+    //     console.log(data);
+    //     if (messagesReturn.status === 200) {
+    //       console.log(data.data);
+    //       await dispatch(updateChannelMessage(data.data));
+    //     } else {
+    //       await dispatch(updateChannelMessage([]));
+    //     }
+    //   } else {
+    //     message.error('Connexion failed');
+    //   }
+    // }
   });
 
   socket.on('private message', async (mess) => {
     console.log('private message');
     console.log(mess);
     if (mess.chat_id === messageUserSelected.chatId) {
-      await dispatch(addChannelMessage(mess.id, messageUserSelected.pseudo, mess.content));
+      await dispatch(addChannelMessage(
+        mess.id, messageUserSelected.pseudo, mess.content, mess.from_user, mess.to_user,
+      ));
     }
   });
 

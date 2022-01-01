@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { React, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
+import APIUser from '../API/APIUser';
 import socket from '../socket';
 import ChannelMessageSelector from '../store/ChannelMessageSelector';
 import MessageUserSelectedSelector from '../store/MessageUserSelectedSelector';
@@ -13,7 +13,7 @@ function MessageItem({ Message }) {
   return (
     <li className={Message.isRespond ? 'chat-left' : 'chat-right'}>
       <div className="chat-avatar">
-        <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin" />
+        <img src={Message.isRespond ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' : 'https://www.bootdey.com/img/Content/avatar/avatar2.png'} alt="Retail Admin" />
         <div className="chat-name">{Message.pseudo}</div>
       </div>
       <div className="chat-text">
@@ -28,8 +28,7 @@ function MessageItem({ Message }) {
 }
 
 MessageItem.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  Message: PropTypes.object.isRequired,
+  Message: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 function ChannelMessageList({ channelMessage }) {
@@ -46,8 +45,7 @@ function ChannelMessageList({ channelMessage }) {
 }
 
 ChannelMessageList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  channelMessage: PropTypes.array.isRequired,
+  channelMessage: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 function AddChannelMessage() {
@@ -77,7 +75,25 @@ function AddChannelMessage() {
       content,
       toUserId: messageUserSelected.userId,
     });
-    await dispatch(addChannelMessage(null, messageUserSelected.pseudo, textarea.current.value));
+    const userReturn = await APIUser.getUser();
+    let fromUser = null;
+    if (userReturn) {
+      const { data } = userReturn;
+      if (userReturn.status === 200) {
+        console.log(data.data);
+        fromUser = { id: data.data.id, pseudo: data.data.pseudo };
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
+    if (fromUser !== null) {
+      await dispatch(addChannelMessage(
+        null, messageUserSelected.pseudo, textarea.current.value, fromUser,
+        { id: messageUserSelected.userId, pseudo: messageUserSelected.pseudo },
+      ));
+    }
     setLoading(false);
     textarea.current.value = '';
     textarea.current.focus();
@@ -101,20 +117,23 @@ function AddChannelMessage() {
 function ChannelMessageStore() {
   const channelMessage = useSelector(ChannelMessageSelector);
   const messageUserSelected = useSelector(MessageUserSelectedSelector);
-  return (
-    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
-      <div className="selected-user">
-        <span>
-          To:
-          <span className="name">{messageUserSelected.pseudo}</span>
-        </span>
+  if (messageUserSelected.isChatSelected) {
+    return (
+      <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+        <div className="selected-user">
+          <span>
+            To:
+            <span className="name">{messageUserSelected.pseudo}</span>
+          </span>
+        </div>
+        <div className="chat-container">
+          <ChannelMessageList channelMessage={channelMessage} />
+          <AddChannelMessage />
+        </div>
       </div>
-      <div className="chat-container">
-        <ChannelMessageList channelMessage={channelMessage} />
-        <AddChannelMessage />
-      </div>
-    </div>
-  );
+    );
+  }
+  return (<div> </div>);
 }
 
 export default ChannelMessageStore;
