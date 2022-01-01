@@ -15,8 +15,8 @@ const Header = (props) => {
   const [cookies, setCookie] = useCookies(['user']);
   const [selectedOption, setSelectedOption] = useState({ value: cookies.Lang ? cookies.Lang.toLowerCase() : 'en', label: cookies.Lang ? cookies.Lang.toUpperCase() : 'EN' });
   const options = [
-    { value: 'en', label: 'EN' },
     { value: 'fr', label: 'FR' },
+    { value: 'en', label: 'EN' },
   ];
   useEffect(() => setState(isLogin()), [props]);
 
@@ -35,7 +35,7 @@ const Header = (props) => {
   return (
     <header>
       <Navbar>
-        <Link className="navbar-brand" to="/home">Module JS</Link>
+        <Link className="navbar-brand" to="/home">{t('jsModule')}</Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Select

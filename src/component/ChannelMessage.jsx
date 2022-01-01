@@ -115,6 +115,7 @@ function AddChannelMessage() {
 }
 
 function ChannelMessageStore() {
+  const { t } = useTranslation();
   const channelMessage = useSelector(ChannelMessageSelector);
   const messageUserSelected = useSelector(MessageUserSelectedSelector);
   if (messageUserSelected.isChatSelected) {
@@ -122,7 +123,7 @@ function ChannelMessageStore() {
       <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
         <div className="selected-user">
           <span>
-            To:
+            {t('chatTo')}
             <span className="name">{messageUserSelected.pseudo}</span>
           </span>
         </div>

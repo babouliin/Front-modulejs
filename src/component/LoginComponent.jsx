@@ -74,11 +74,11 @@ const LoginComponent = (props) => {
         setState({ ...state, loginError: '', loginLoading: false });
         login(props);
       } else {
-        message.error(`Login Failed ${data.message}`);
+        message.error(`${t('loginFailed')} ${data.message}`);
         setState({ ...state, loginError: '', loginLoading: false });
       }
     } else {
-      message.error('Connexion failed');
+      message.error(t('serverUnreachable'));
       setState({ ...state, loginError: '', loginLoading: false });
     }
   };
