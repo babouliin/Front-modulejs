@@ -2,6 +2,10 @@
 
 Frontend part of moduleJS.
 
+## Access the online project
+
+Open [https://front-modulejs.herokuapp.com/](https://front-modulejs.herokuapp.com/) to use the online version of our project.
+
 ## Test the project
 
 First, you will need the .env file be able to use the project.\
