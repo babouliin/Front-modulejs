@@ -116,7 +116,7 @@ const SignupComponent = (props) => {
         <div className="col-6">
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
           <label htmlFor="pseudoSign" className="mt-2">
-            Pseudo
+            {t('username')}
             <span id="pseudoSign" style={{ color: 'red' }}>*</span>
           </label>
           <FormControl

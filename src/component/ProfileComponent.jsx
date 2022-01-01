@@ -131,7 +131,7 @@ const ProfileComponent = () => {
         <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
           <label htmlFor="pseudoSign" className="mt-2">
-            Pseudo
+            {t('username')}
             <span id="pseudoSign" style={{ color: 'red' }}>*</span>
           </label>
           <FormControl
@@ -237,7 +237,7 @@ const ProfileComponent = () => {
         <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
           <label htmlFor="pseudoSign" className="mt-2">
-            Pseudo
+            {t('username')}
             <span id="pseudoSign" style={{ color: 'red' }}>*</span>
           </label>
           <p>{state.profilePseudo}</p>

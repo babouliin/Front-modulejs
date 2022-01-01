@@ -15,8 +15,8 @@ const Header = (props) => {
   const [cookies, setCookie] = useCookies(['user']);
   const [selectedOption, setSelectedOption] = useState({ value: cookies.Lang ? cookies.Lang.toLowerCase() : 'en', label: cookies.Lang ? cookies.Lang.toUpperCase() : 'EN' });
   const options = [
-    { value: 'en', label: 'EN' },
     { value: 'fr', label: 'FR' },
+    { value: 'en', label: 'EN' },
   ];
   useEffect(() => setState(isLogin()), [props]);
 
