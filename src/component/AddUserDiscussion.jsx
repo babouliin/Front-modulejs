@@ -3,29 +3,60 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addUserDiscussion } from '../store/UserDiscussionsAction';
 import { updateChannelMessage } from '../store/ChannelMessageAction';
 import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
+import APIMessage from '../API/APIMessage';
 import UserListSelector from '../store/UserListSelector';
+import UserDiscussionsSelector from '../store/UserDiscussionsSelector';
 
 function AddUserDiscussion() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const userList = useSelector(UserListSelector);
+  const userDiscussions = useSelector(UserDiscussionsSelector);
   const [state, setState] = useState({
     optionSelected: '0',
     optionNameSelected: '...',
   });
 
   const handleSubmit = (async (e) => {
+    let hasExistingUserDiscussion = false;
     e.preventDefault();
-    console.log(state.optionSelected);
     setLoading(true);
     if (state.optionSelected !== '0') {
-      await dispatch(addUserDiscussion(null, state.optionNameSelected, state.optionSelected));
-      await dispatch(
-        updateMessageUserSelected(
-          null, state.optionSelected, state.optionNameSelected,
-        ),
-      );
-      await dispatch(updateChannelMessage([]));
+      userDiscussions.forEach(async (userDiscussion) => {
+        if (userDiscussion.other_user.id
+          === state.optionSelected) {
+          hasExistingUserDiscussion = true;
+          console.log(hasExistingUserDiscussion);
+          await dispatch(
+            updateMessageUserSelected(
+              userDiscussion.id, state.optionSelected, state.optionNameSelected,
+            ),
+          );
+          if (userDiscussion.id != null) {
+            const messagesReturn = await APIMessage.messages(userDiscussion.id);
+            if (messagesReturn) {
+              const { data } = messagesReturn;
+              if (messagesReturn.status === 200) {
+                console.log(data.data);
+                await dispatch(updateChannelMessage(data.data));
+              } else {
+                await dispatch(updateChannelMessage([]));
+              }
+            }
+          } else {
+            await dispatch(updateChannelMessage([]));
+          }
+        }
+      });
+      if (!hasExistingUserDiscussion) {
+        await dispatch(addUserDiscussion(null, state.optionNameSelected, state.optionSelected));
+        await dispatch(
+          updateMessageUserSelected(
+            null, state.optionSelected, state.optionNameSelected,
+          ),
+        );
+        await dispatch(updateChannelMessage([]));
+      }
     }
     setLoading(false);
     setState((prevState) => ({

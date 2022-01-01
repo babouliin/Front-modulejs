@@ -52,33 +52,33 @@ const Home = () => {
     await dispatch(updateUserDiscussion(chats.chats));
   });
 
-  socket.on('new chat', async (chat) => {
+  socket.off('new chat').on('new chat', async (chat) => {
     console.log('new chat');
     console.log(chat);
     await dispatch(addUserDiscussion(chat.id, chat.other_user.pseudo, chat.other_user.id));
-    // if (chat.isEmitter) {
-    //   await dispatch(
-    //     updateMessageUserSelected(
-    //       chat.id, chat.other_user.id, chat.other_user.pseudo,
-    //     ),
-    //   );
-    //   const messagesReturn = await APIMessage.messages(chat.id);
-    //   if (messagesReturn) {
-    //     const { data } = messagesReturn;
-    //     console.log(data);
-    //     if (messagesReturn.status === 200) {
-    //       console.log(data.data);
-    //       await dispatch(updateChannelMessage(data.data));
-    //     } else {
-    //       await dispatch(updateChannelMessage([]));
-    //     }
-    //   } else {
-    //     message.error('Connexion failed');
-    //   }
-    // }
+    if (chat.isEmitter) {
+      await dispatch(
+        updateMessageUserSelected(
+          chat.id, chat.other_user.id, chat.other_user.pseudo,
+        ),
+      );
+      const messagesReturn = await APIMessage.messages(chat.id);
+      if (messagesReturn) {
+        const { data } = messagesReturn;
+        console.log(data);
+        if (messagesReturn.status === 200) {
+          console.log(data.data);
+          await dispatch(updateChannelMessage(data.data));
+        } else {
+          await dispatch(updateChannelMessage([]));
+        }
+      } else {
+        message.error('Connexion failed');
+      }
+    }
   });
 
-  socket.on('private message', async (mess) => {
+  socket.off('private message').on('private message', async (mess) => {
     console.log('private message');
     console.log(mess);
     if (mess.chat_id === messageUserSelected.chatId) {

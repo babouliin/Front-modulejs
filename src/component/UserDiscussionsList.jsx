@@ -10,7 +10,7 @@ import deleteUserDiscussion from '../store/UserDiscussionsAction';
 import { updateChannelMessage } from '../store/ChannelMessageAction';
 import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
 
-function UserDiscussionItem({ userDiscussion, onDelete }) {
+function UserDiscussionItem({ userDiscussion }) {
   const dispatch = useDispatch();
   const OnSelect = async (chatId) => {
     console.log('onSelect');
@@ -47,11 +47,6 @@ function UserDiscussionItem({ userDiscussion, onDelete }) {
         <p className="name-time">
           <span className="name">{userDiscussion.other_user.pseudo}</span>
         </p>
-        <button className="btn float-end" type="button" onClick={() => onDelete(userDiscussion)}>
-          <span className="iconRed">
-            <i className="fa fa-minus-circle" />
-          </span>
-        </button>
       </li>
     </div>
   );
@@ -59,7 +54,6 @@ function UserDiscussionItem({ userDiscussion, onDelete }) {
 
 UserDiscussionItem.propTypes = {
   userDiscussion: PropTypes.objectOf(PropTypes.string).isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 function UserDiscussionsList({ userDiscussions, onDelete }) {
