@@ -1,5 +1,7 @@
 import wait from '../wait';
-import { ADD_USER_DISCUSSION, DELETE_USER_DISCUSSION, UPDATE_USER_DISCUSSION } from './UserDiscussionsReducer';
+import {
+  ADD_USER_DISCUSSION, DELETE_USER_DISCUSSION, UPDATE_USER_DISCUSSION,
+} from './UserDiscussionsReducer';
 
 export const updateUserDiscussion = (userDiscussions) => ({
   type: UPDATE_USER_DISCUSSION,

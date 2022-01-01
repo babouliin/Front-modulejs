@@ -77,7 +77,7 @@ function AddChannelMessage() {
       content,
       toUserId: messageUserSelected.userId,
     });
-    await dispatch(addChannelMessage(messageUserSelected.pseudo, textarea.current.value));
+    await dispatch(addChannelMessage(null, messageUserSelected.pseudo, textarea.current.value));
     setLoading(false);
     textarea.current.value = '';
     textarea.current.focus();
@@ -100,12 +100,13 @@ function AddChannelMessage() {
 
 function ChannelMessageStore() {
   const channelMessage = useSelector(ChannelMessageSelector);
+  const messageUserSelected = useSelector(MessageUserSelectedSelector);
   return (
     <div className="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
       <div className="selected-user">
         <span>
           To:
-          <span className="name">Emily Russell</span>
+          <span className="name">{messageUserSelected.pseudo}</span>
         </span>
       </div>
       <div className="chat-container">

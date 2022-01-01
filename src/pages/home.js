@@ -11,9 +11,9 @@ import APIMessage from '../API/APIMessage';
 import APIUser from '../API/APIUser';
 import ChannelMessageStore from '../component/ChannelMessage';
 import UserDiscussionsListStore from '../component/UserDiscussionsList';
-import AddUserDiscussion from '../component/AddUserDiscussion2';
+import AddUserDiscussion from '../component/AddUserDiscussion';
 import MessageUserSelectedSelector from '../store/MessageUserSelectedSelector';
-import { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussionsAction';
+import deleteUserDiscussion, { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussionsAction';
 import addChannelMessage, { updateChannelMessage } from '../store/ChannelMessageAction';
 import socket from '../socket';
 import { logout } from '../middleware/auth';
@@ -64,7 +64,7 @@ const Home = () => {
     console.log('private message');
     console.log(mess);
     if (mess.chat_id === messageUserSelected.chatId) {
-      await dispatch(addChannelMessage(messageUserSelected.pseudo, mess.content));
+      await dispatch(addChannelMessage(mess.id, messageUserSelected.pseudo, mess.content));
     }
   });
 

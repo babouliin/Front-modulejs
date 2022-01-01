@@ -71,7 +71,7 @@ UserDiscussionItem.propTypes = {
 function UserDiscussionsList({ userDiscussions, onDelete }) {
   return (
     <ul className="users">
-      {userDiscussions && userDiscussions.map((userDiscussion) => (
+      {userDiscussions && userDiscussions.length > 0 && userDiscussions.map((userDiscussion) => (
         <UserDiscussionItem
           userDiscussion={userDiscussion}
           key={userDiscussion.id}

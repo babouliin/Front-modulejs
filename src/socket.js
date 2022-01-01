@@ -5,7 +5,7 @@ const URL = 'http://localhost:8080';
 const socket = io(URL, { autoConnect: false });
 
 socket.onAny((event, ...args) => {
-  console.log(event, args);
+  console.log(`Socket ${event}`, args);
 });
 
 export default socket;

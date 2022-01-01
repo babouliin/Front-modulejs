@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button, message,
 } from 'antd';
@@ -6,9 +6,10 @@ import {
   FormControl, Spinner,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../component/Layout';
 import APIUser from '../API/APIUser';
+import UserSelector from '../store/UserSelector';
 import updateUser from '../store/UserAction';
 import '../assets/scss/pages/_profile.css';
 
@@ -29,24 +30,26 @@ const Profile = () => {
   });
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const user = useSelector(UserSelector);
   const [isEdit, setEdit] = useState(false);
   console.log(`isEdit ${isEdit}`);
 
-  const loadUser = (async () => {
-    const userReturn = await APIUser.getUser();
-    if (userReturn) {
-      const { data } = userReturn;
-      if (userReturn.status === 200) {
-        console.log(data.data);
-        await dispatch(updateUser(data.data));
+  useEffect(() => {
+    (async function loadUser() {
+      const userReturn = await APIUser.getUser();
+      if (userReturn) {
+        const { data } = userReturn;
+        if (userReturn.status === 200) {
+          console.log(data.data);
+          await dispatch(updateUser(data.data));
+        } else {
+          message.error(`Error ${data.message}`);
+        }
       } else {
-        message.error(`Error ${data.message}`);
+        message.error('Connexion failed');
       }
-    } else {
-      message.error('Connexion failed');
-    }
-  });
-  loadUser();
+    }());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -110,7 +113,8 @@ const Profile = () => {
     const userReturn = await APIUser.updateUser(profilePseudo, profilePassword);
     if (userReturn) {
       const { data } = userReturn;
-      if (userReturn.status === 200) {
+      console.log(`updateUser ${data.data}`);
+      if (userReturn.status === 201) {
         await dispatch(updateUser(data.data));
         message.success('Update Success');
       } else {
@@ -244,7 +248,7 @@ const Profile = () => {
 
   const profileTextBox = () => {
     const {
-      profileEmail, profilePseudo, profileLoading,
+      profileLoading,
     } = state;
 
     return (
@@ -259,7 +263,7 @@ const Profile = () => {
               Pseudo
               <span id="pseudoSign" style={{ color: 'red' }}>*</span>
             </label>
-            <p>{profilePseudo}</p>
+            <p>{user.pseudo}</p>
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
@@ -267,7 +271,7 @@ const Profile = () => {
               {t('email')}
               <span id="emailSign" style={{ color: 'red' }}>*</span>
             </label>
-            <p>{profileEmail}</p>
+            <p>{user.email}</p>
           </div>
         </div>
         <div className="row gutters">
@@ -300,13 +304,8 @@ const Profile = () => {
                     <div className="user-avatar">
                       <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" />
                     </div>
-                    <h5 className="user-name">Yuki Hayashi</h5>
-                    <h6 className="user-email">yuki@Maxwell.com</h6>
-                  </div>
-                  <div className="about">
-                    <h5>{t('about')}</h5>
-                    <p>I&apos;m Yuki. Full Stack Designer I enjoy creating user-centric,</p>
-                    <p> delightful and human experiences.</p>
+                    <h5 className="user-name">{user.pseudo}</h5>
+                    <h6 className="user-email">{user.email}</h6>
                   </div>
                 </div>
               </div>
