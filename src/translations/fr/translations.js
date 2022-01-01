@@ -39,6 +39,7 @@ const TRANSLATIONS_FR = {
 
   chatTo: 'Destinataire : ',
   letsChat: 'Discutez avec vos amis',
+  jsModule: 'Module JS',
 
 };
 

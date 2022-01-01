@@ -39,6 +39,7 @@ const TRANSLATIONS_EN = {
 
   chatTo: 'To: ',
   letsChat: 'Chat with your friends',
+  jsModule: 'JS Module',
 };
 
 export default TRANSLATIONS_EN;

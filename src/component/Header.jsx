@@ -35,7 +35,7 @@ const Header = (props) => {
   return (
     <header>
       <Navbar>
-        <Link className="navbar-brand" to="/home">Module JS</Link>
+        <Link className="navbar-brand" to="/home">{t('jsModule')}</Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Select
