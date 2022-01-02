@@ -61,50 +61,62 @@ const Profile = () => {
 
   const profileErr = async () => {
     let invalid = false;
-    setState({ ...state, profileLoading: true });
+    let emailError = '';
+    let pseudoError = '';
+    let passwordError = '';
+    let passwordConfError = '';
     const {
       profileEmail, profilePseudo, profilePassword, profilePasswordConfirmation,
     } = state;
 
+    setState({ ...state, profileLoading: true });
+
     if (!profileEmail || profileEmail.length === 0) {
-      setState({ ...state, profileEmailError: t('errorWithoutEmail') });
+      emailError = t('errorWithoutEmail');
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(profileEmail)) {
-      setState({ ...state, profileEmailError: t('errorEmailNotValid') });
+      emailError = t('errorEmailNotValid');
       invalid = true;
     } else {
-      setState({ ...state, profileEmailError: '' });
+      emailError = '';
     }
 
     if (!profilePseudo || profilePseudo.length === 0) {
-      setState({ ...state, profilePseudoError: t('errorWithoutPseudo') });
+      pseudoError = t('errorWithoutPseudo');
       invalid = true;
     } else if (profilePseudo.length < 4) {
-      setState({ ...state, profilePseudoError: t('errorPseudoNotValid') });
+      pseudoError = t('errorPseudoNotValid');
       invalid = true;
     } else {
-      setState({ ...state, profilePseudoError: '' });
+      pseudoError = '';
     }
 
     if (!profilePassword || profilePassword.length === 0) {
-      setState({ ...state, profilePasswordError: t('errorWithoutPassword') });
+      passwordError = t('errorWithoutPassword');
       invalid = true;
     } else if (profilePassword.length < 8 || !/\d/.test(profilePassword) || !/[a-zA-Z]/.test(profilePassword)) {
-      setState({ ...state, profilePasswordError: t('errorPasswordNotValid') });
+      passwordError = t('errorPasswordNotValid');
       invalid = true;
     } else {
-      setState({ ...state, profilePasswordError: '' });
+      passwordError = '';
     }
 
     if (profilePassword !== profilePasswordConfirmation) {
-      setState({ ...state, profilePasswordConfirmationError: t('errorDifferentPassword') });
+      passwordConfError = t('errorDifferentPassword');
       invalid = true;
     } else {
-      setState({ ...state, profilePasswordConfirmationError: '' });
+      passwordConfError = '';
     }
 
     if (invalid) {
-      setState({ ...state, profileLoading: false });
+      setState({
+        ...state,
+        profileEmailError: emailError,
+        profilePseudoError: pseudoError,
+        profilePasswordError: passwordError,
+        profilePasswordConfirmationError: passwordConfError,
+        profileLoading: false,
+      });
       return;
     }
 

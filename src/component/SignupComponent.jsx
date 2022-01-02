@@ -41,6 +41,10 @@ const SignupComponent = (props) => {
 
   const signupErr = async () => {
     let invalid = false;
+    let errorPseudo = '';
+    let errorEmail = '';
+    let errorPassword = '';
+    let errorPasswordConf = '';
     const {
       signupEmail, signupPseudo, signupPassword, signupPasswordConfirmation,
     } = state;
@@ -48,44 +52,51 @@ const SignupComponent = (props) => {
     setState({ ...state, signupLoading: true });
 
     if (!signupEmail || signupEmail.length === 0) {
-      setState({ ...state, signupEmailError: t('errorWithoutEmail') });
+      errorEmail = t('errorWithoutEmail');
       invalid = true;
     } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(signupEmail)) {
-      setState({ ...state, signupEmailError: t('errorEmailNotValid') });
+      errorEmail = t('errorEmailNotValid');
       invalid = true;
     } else {
-      setState({ ...state, signupEmailError: '' });
+      errorEmail = '';
     }
 
     if (!signupPseudo || signupPseudo.length === 0) {
-      setState({ ...state, signupPseudoError: t('errorWithoutPseudo') });
+      errorPseudo = t('errorWithoutPseudo');
       invalid = true;
     } else if (signupPseudo.length < 4) {
-      setState({ ...state, signupPseudoError: t('errorPseudoNotValid') });
+      errorPseudo = t('errorPseudoNotValid');
       invalid = true;
     } else {
-      setState({ ...state, signupPseudoError: '' });
+      errorPseudo = '';
     }
 
     if (!signupPassword || signupPassword.length === 0) {
-      setState({ ...state, signupPasswordError: t('errorWithoutPassword') });
+      errorPassword = t('errorWithoutPassword');
       invalid = true;
     } else if (signupPassword.length < 8 || !/\d/.test(signupPassword) || !/[a-zA-Z]/.test(signupPassword)) {
-      setState({ ...state, signupPasswordError: t('errorPasswordNotValid') });
+      errorPassword = t('errorPasswordNotValid');
       invalid = true;
     } else {
-      setState({ ...state, signupPasswordError: '' });
+      errorPassword = '';
     }
 
     if (signupPassword !== signupPasswordConfirmation) {
-      setState({ ...state, signupPasswordConfirmError: t('errorDifferentPassword') });
+      errorPasswordConf = t('errorDifferentPassword');
       invalid = true;
     } else {
-      setState({ ...state, signupPasswordConfirmError: '' });
+      errorPasswordConf = '';
     }
 
     if (invalid) {
-      setState({ ...state, signupLoading: false });
+      setState({
+        ...state,
+        signupEmailError: errorEmail,
+        signupPseudoError: errorPseudo,
+        signupPasswordError: errorPassword,
+        signupPasswordConfirmError: errorPasswordConf,
+        signupLoading: false,
+      });
       return;
     }
 
