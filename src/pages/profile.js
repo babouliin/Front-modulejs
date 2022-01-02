@@ -32,7 +32,6 @@ const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector(UserSelector);
   const [isEdit, setEdit] = useState(false);
-  console.log(`isEdit ${isEdit}`);
 
   useEffect(() => {
     (async function loadUser() {
@@ -40,16 +39,15 @@ const Profile = () => {
       if (userReturn) {
         const { data } = userReturn;
         if (userReturn.status === 200) {
-          console.log(data.data);
           await dispatch(updateUser(data.data));
         } else {
-          message.error(`Error ${data.message}`);
+          message.error(`${data.message}`);
         }
       } else {
-        message.error('Connexion failed');
+        message.error(t('serverUnreachable'));
       }
     }());
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,25 +59,14 @@ const Profile = () => {
 
   const profileErr = async () => {
     let invalid = false;
-    let emailError = '';
     let pseudoError = '';
     let passwordError = '';
     let passwordConfError = '';
     const {
-      profileEmail, profilePseudo, profilePassword, profilePasswordConfirmation,
+      profilePseudo, profilePassword, profilePasswordConfirmation,
     } = state;
 
     setState({ ...state, profileLoading: true });
-
-    if (!profileEmail || profileEmail.length === 0) {
-      emailError = t('errorWithoutEmail');
-      invalid = true;
-    } else if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(profileEmail)) {
-      emailError = t('errorEmailNotValid');
-      invalid = true;
-    } else {
-      emailError = '';
-    }
 
     if (!profilePseudo || profilePseudo.length === 0) {
       pseudoError = t('errorWithoutPseudo');
@@ -111,7 +98,6 @@ const Profile = () => {
     if (invalid) {
       setState({
         ...state,
-        profileEmailError: emailError,
         profilePseudoError: pseudoError,
         profilePasswordError: passwordError,
         profilePasswordConfirmationError: passwordConfError,
@@ -120,28 +106,25 @@ const Profile = () => {
       return;
     }
 
-    console.log('OK');
-
     const userReturn = await APIUser.updateUser(profilePseudo, profilePassword);
     if (userReturn) {
       const { data } = userReturn;
-      console.log(`updateUser ${data.data}`);
       if (userReturn.status === 201) {
         await dispatch(updateUser(data.data));
-        message.success('Update Success');
+        message.success(t('updateSuccess'));
       } else {
-        message.error(`Update Failed ${data.message}`);
+        message.error(`${t('updateFailed')} ${data.message}`);
       }
       setEdit(false);
       setState({ ...state, profileLoading: false, profileError: '' });
     } else {
-      message.error('Connexion failed');
+      message.error(t('serverUnreachable'));
     }
   };
 
   const profileTextBoxEdit = () => {
     const {
-      profileEmail, profilePseudo, profilePassword, profilePasswordConfirmation, profileLoading,
+      profilePseudo, profilePassword, profilePasswordConfirmation, profileLoading,
     } = state;
     const {
       profileEmailError,
@@ -157,7 +140,27 @@ const Profile = () => {
           <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <h6 className="mb-2 text-primary">{t('personalDetails')}</h6>
           </div>
-          <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+            <label htmlFor="emailSign" className="mt-2">
+              {t('email')}
+              <span id="emailSign" style={{ color: 'red' }}>*</span>
+            </label>
+            <FormControl
+              disabled
+              name="profileEmail"
+              value={user.email}
+              placeholder={t('placeHolderEmail')}
+              type="email"
+              className={profileEmailError && profileEmailError.length !== 0
+                ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
+              style={{ borderRadius: '20px 20px 20px 20px' }}
+            />
+            <div className="invalid-feedback">
+              {profileEmailError}
+            </div>
+          </div>
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="pseudoSign" className="mt-2">
               {t('username')}
@@ -176,34 +179,14 @@ const Profile = () => {
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-            <label htmlFor="emailSign" className="mt-2">
-              {t('email')}
-              <span id="emailSign" style={{ color: 'red' }}>*</span>
-            </label>
-            <FormControl
-              name="profileEmail"
-              value={profileEmail}
-              placeholder={t('placeHolderEmail')}
-              onChange={handleChange}
-              type="email"
-              className={profileEmailError && profileEmailError.length !== 0
-                ? 'form-control form-control-user is-invalid' : 'form-control form-control-user'}
-              style={{ borderRadius: '20px 20px 20px 20px' }}
-            />
-            <div className="invalid-feedback">
-              {profileEmailError}
-            </div>
-          </div>
-          <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="passSign" className="mt-2">
-              {t('password')}
+              {t('newPassword')}
               <span id="passSign" style={{ color: 'red' }}>*</span>
             </label>
             <FormControl
               name="profilePassword"
               value={profilePassword}
-              placeholder={t('placeHolderPassword')}
+              placeholder={t('placeHolderNewPassword')}
               onChange={handleChange}
               type="password"
               className={profilePasswordError && profilePasswordError.length !== 0
@@ -269,21 +252,21 @@ const Profile = () => {
           <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <h6 className="mb-2 text-primary">{t('personalDetails')}</h6>
           </div>
-          <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-            <label htmlFor="pseudoSign" className="mt-2">
-              {t('username')}
-              <span id="pseudoSign" style={{ color: 'red' }}>*</span>
-            </label>
-            <p>{user.pseudo}</p>
-          </div>
-          <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
             <label htmlFor="emailSign" className="mt-2">
               {t('email')}
               <span id="emailSign" style={{ color: 'red' }}>*</span>
             </label>
             <p>{user.email}</p>
+          </div>
+          <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+            <label htmlFor="pseudoSign" className="mt-2">
+              {t('username')}
+              <span id="pseudoSign" style={{ color: 'red' }}>*</span>
+            </label>
+            <p>{user.pseudo}</p>
           </div>
         </div>
         <div className="row gutters">
@@ -305,7 +288,7 @@ const Profile = () => {
   };
 
   return (
-    <Layout className="app-camearadetails" isHeader>
+    <Layout className="" isHeader>
       <div className="container">
         <div className="row gutters">
           <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">

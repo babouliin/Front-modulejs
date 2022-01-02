@@ -5,7 +5,6 @@ const burl = process.env.REACT_APP_API_URL;
 
 const exportedObject = {
   chats() {
-    console.log(headers);
     return axios.get(
       `${burl}/chats`,
       { headers },

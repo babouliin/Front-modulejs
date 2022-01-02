@@ -20,7 +20,7 @@ const Layout = ({ className, isHeader, children }) => {
 Layout.propTypes = {
   className: PropTypes.string,
   isHeader: PropTypes.bool,
-  children: PropTypes.element,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 };
 
 Layout.defaultProps = {

@@ -11,7 +11,7 @@ const PublicRoute = ({ component: Component, restricted, ...rest }) => (
 );
 
 PublicRoute.propTypes = {
-  component: PropTypes.element,
+  component: PropTypes.elementType,
   restricted: PropTypes.bool,
 };
 

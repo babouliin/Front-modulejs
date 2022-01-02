@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
 import store from './store';
 import {
-  Login, Home, Template, Profile, NoMatch,
+  Login, Home, Profile, NoMatch,
 } from './pages';
 import PublicRoute from './hooks/PublicRoute';
 import PrivateRoute from './hooks/PrivateRoute';
@@ -18,7 +18,6 @@ function App() {
             <PublicRoute restricted component={Login} path="/" exact />
             <PrivateRoute component={Home} path="/home" exact />
             <PrivateRoute component={Profile} path="/profile" exact />
-            <PrivateRoute component={Template} path="/template" exact />
 
             <PrivateRoute component={NoMatch} path="*" />
 

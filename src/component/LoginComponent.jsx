@@ -61,18 +61,15 @@ const LoginComponent = (props) => {
       return;
     }
 
-    console.log('OK');
-
     const loginReturn = await APIAuth.login(loginEmail, loginPassword);
     if (loginReturn) {
       const { data } = loginReturn;
       if (loginReturn.status === 200) {
-        console.log(data.token);
         setCookie('Token', data.token, { path: '/' });
         updateHeadersToken(data.token);
         localStorage.setItem('token', data.token);
         setState({ ...state, loginError: '', loginLoading: false });
-        login(props);
+        login(props, t('loginSuccess'));
       } else {
         message.error(`${t('loginFailed')} ${data.message}`);
         setState({ ...state, loginError: '', loginLoading: false });

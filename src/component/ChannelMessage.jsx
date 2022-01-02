@@ -9,26 +9,24 @@ import ChannelMessageSelector from '../store/ChannelMessageSelector';
 import MessageUserSelectedSelector from '../store/MessageUserSelectedSelector';
 import addChannelMessage from '../store/ChannelMessageAction';
 
-function MessageItem({ Message }) {
+function MessageItem({ isRespond, pseudo, content }) {
   return (
-    <li className={Message.isRespond ? 'chat-left' : 'chat-right'}>
+    <li className={isRespond ? 'chat-left' : 'chat-right'}>
       <div className="chat-avatar">
-        <img src={Message.isRespond ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' : 'https://www.bootdey.com/img/Content/avatar/avatar2.png'} alt="Retail Admin" />
-        <div className="chat-name">{Message.pseudo}</div>
+        <img src={isRespond ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' : 'https://www.bootdey.com/img/Content/avatar/avatar2.png'} alt="Retail Admin" />
+        <div className="chat-name">{pseudo}</div>
       </div>
       <div className="chat-text">
-        {Message.content}
+        {content}
       </div>
-      {/* <div className="chat-hour">
-        {Message.hour}
-        <span className="fa fa-check-circle" />
-      </div> */}
     </li>
   );
 }
 
 MessageItem.propTypes = {
-  Message: PropTypes.objectOf(PropTypes.string).isRequired,
+  isRespond: PropTypes.bool.isRequired,
+  pseudo: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
 };
 
 function ChannelMessageList({ channelMessage }) {
@@ -36,7 +34,9 @@ function ChannelMessageList({ channelMessage }) {
     <ul className="chat-box chatContainerScroll">
       { channelMessage && channelMessage.map((Message) => (
         <MessageItem
-          Message={Message}
+          isRespond={Message.isRespond}
+          pseudo={Message.pseudo}
+          content={Message.content}
           key={Message.id}
         />
       ))}
@@ -61,11 +61,6 @@ function AddChannelMessage() {
     e.preventDefault();
     setLoading(true);
     const content = textarea.current.value;
-    console.log('handleSubmit');
-    console.log(messageUserSelected.chatId);
-    console.log(content);
-    console.log(messageUserSelected.userId);
-    console.log(cookies.SessionId);
     socket.auth = {
       token: `Bearer ${cookies.Token}`,
       sessionId: `${cookies.SessionId}`,
@@ -80,7 +75,6 @@ function AddChannelMessage() {
     if (userReturn) {
       const { data } = userReturn;
       if (userReturn.status === 200) {
-        console.log(data.data);
         fromUser = { id: data.data.id, pseudo: data.data.pseudo };
       } else {
         return;

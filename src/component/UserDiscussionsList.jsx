@@ -4,34 +4,33 @@ import {
 import { message } from 'antd';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import APIMessage from '../API/APIMessage';
 import UserDiscussionsSelector from '../store/UserDiscussionsSelector';
 import deleteUserDiscussion from '../store/UserDiscussionsAction';
 import { updateChannelMessage } from '../store/ChannelMessageAction';
 import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
 
-function UserDiscussionItem({ userDiscussion }) {
+function UserDiscussionItem({ id, otherUserId, otherUserPseudo }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const OnSelect = async (chatId) => {
-    console.log('onSelect');
     await dispatch(
       updateMessageUserSelected(
-        chatId, userDiscussion.other_user.id, userDiscussion.other_user.pseudo,
+        chatId, otherUserId, otherUserPseudo,
       ),
     );
     if (chatId != null) {
       const messagesReturn = await APIMessage.messages(chatId);
       if (messagesReturn) {
         const { data } = messagesReturn;
-        console.log(data);
         if (messagesReturn.status === 200) {
-          console.log(data.data);
           await dispatch(updateChannelMessage(data.data));
         } else {
           await dispatch(updateChannelMessage([]));
         }
       } else {
-        message.error('Connexion failed');
+        message.error(t('serverUnreachable'));
       }
     } else {
       await dispatch(updateChannelMessage([]));
@@ -39,13 +38,13 @@ function UserDiscussionItem({ userDiscussion }) {
   };
 
   return (
-    <div onClick={() => OnSelect(userDiscussion.id)} aria-hidden="true">
-      <li className="person" data-chat={userDiscussion.other_user.id}>
+    <div onClick={() => OnSelect(id)} aria-hidden="true">
+      <li className="person" data-chat={otherUserId}>
         <div className="user">
           <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin" />
         </div>
         <p className="name-time">
-          <span className="name">{userDiscussion.other_user.pseudo}</span>
+          <span className="name">{otherUserPseudo}</span>
         </p>
       </li>
     </div>
@@ -53,7 +52,9 @@ function UserDiscussionItem({ userDiscussion }) {
 }
 
 UserDiscussionItem.propTypes = {
-  userDiscussion: PropTypes.objectOf(PropTypes.string).isRequired,
+  id: PropTypes.string.isRequired,
+  otherUserId: PropTypes.string.isRequired,
+  otherUserPseudo: PropTypes.string.isRequired,
 };
 
 function UserDiscussionsList({ userDiscussions, onDelete }) {
@@ -61,7 +62,9 @@ function UserDiscussionsList({ userDiscussions, onDelete }) {
     <ul className="users">
       {userDiscussions && userDiscussions.length > 0 && userDiscussions.map((userDiscussion) => (
         <UserDiscussionItem
-          userDiscussion={userDiscussion}
+          id={userDiscussion.id}
+          otherUserId={userDiscussion.other_user.id}
+          otherUserPseudo={userDiscussion.other_user.pseudo}
           key={userDiscussion.id}
           onDelete={onDelete}
         />

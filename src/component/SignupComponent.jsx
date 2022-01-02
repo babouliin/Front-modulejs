@@ -100,24 +100,21 @@ const SignupComponent = (props) => {
       return;
     }
 
-    console.log('OK');
-
     const signupReturn = await APIAuth.signup(signupEmail, signupPassword, signupPseudo);
     if (signupReturn) {
       const { data } = signupReturn;
       if (signupReturn.status === 201) {
-        console.log(data.token);
         setCookie('Token', data.token, { path: '/' });
         updateHeadersToken(data.token);
         localStorage.setItem('token', data.token);
         setState({ ...state, signupLoading: false, signupError: '' });
-        signup(props);
+        signup(props, t('signUpSuccess'));
       } else {
-        message.error(`Signup Failed ${data.message}`);
+        message.error(`${t('signUpFailed')} ${data.message}`);
         setState({ ...state, signupLoading: false, signupError: '' });
       }
     } else {
-      message.error('Connexion failed');
+      message.error(t('serverUnreachable'));
     }
   };
 

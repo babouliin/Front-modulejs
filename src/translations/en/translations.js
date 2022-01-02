@@ -11,6 +11,7 @@ const TRANSLATIONS_EN = {
 
   placeHolderEmail: 'Enter your e-mail adress',
   placeHolderPassword: 'Enter your password',
+  placeHolderNewPassword: 'Enter your new password',
   placeHolderPasswrdConfirm: 'Confirm your password',
   placeHolderPseudo: 'Enter your username',
   enterYourMessage: 'Enter your message here ...',
@@ -18,6 +19,7 @@ const TRANSLATIONS_EN = {
   email: 'Email',
   username: 'Username',
   password: 'Password',
+  newPassword: 'New password',
   confPassword: 'Password confirmation',
   personalDetails: 'Personal details',
 
@@ -40,8 +42,14 @@ const TRANSLATIONS_EN = {
   chatTo: 'To: ',
   letsChat: 'Chat with your friends',
   jsModule: 'JS Module',
+  socketFailed: 'Socket connection failed',
+  logoutSuccess: 'Logout success',
+  loginSuccess: 'Login success',
   loginFailed: 'Login failed: ',
+  signUpSuccess: 'Sign-Up success',
   signUpFailed: 'Sign-Up failed: ',
+  updateSuccess: 'Profile updated successfully',
+  updateFailed: 'Profile update failed: ',
   serverUnreachable: 'The server is not reachable',
 };
 

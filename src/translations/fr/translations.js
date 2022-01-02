@@ -11,6 +11,7 @@ const TRANSLATIONS_FR = {
 
   placeHolderEmail: 'Entrez votre adresse e-mail',
   placeHolderPassword: 'Entrez votre mot de passe',
+  placeHolderNewPassword: 'Entrez votre nouveau mot de passe',
   placeHolderPasswrdConfirm: 'Confirmez votre mot de passe',
   placeHolderPseudo: 'Entrez votre pseudo',
   enterYourMessage: 'Entrez votre message ici...',
@@ -18,6 +19,7 @@ const TRANSLATIONS_FR = {
   email: 'Adresse e-mail',
   username: 'Pseudo',
   password: 'Mot de passe',
+  newPassword: 'Nouveau mot de passe',
   confPassword: 'Confirmation du mot de passe',
   personalDetails: 'Données personelles',
 
@@ -40,8 +42,14 @@ const TRANSLATIONS_FR = {
   chatTo: 'Destinataire : ',
   letsChat: 'Discutez avec vos amis',
   jsModule: 'Module JS',
+  socketFailed: 'Echec de la connexion à la socket',
+  logoutSuccess: 'Deconnexion réussie',
+  loginSuccess: 'Connexion réussie',
   loginFailed: 'Echec de la connexion : ',
+  signUpSuccess: 'Inscription réussie',
   signUpFailed: 'Echec de l\'inscription : ',
+  updateSuccess: 'Mise à jour du profil',
+  updateFailed: 'Echec mise à jour du profil : ',
   serverUnreachable: 'Connexion au serveur impossible',
 };
 

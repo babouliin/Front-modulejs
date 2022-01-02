@@ -9,7 +9,7 @@ const NoMatch = () => {
   return (
     <Layout className="app-404" isHeader={false}>
       <h1>{t('pageNotFound')}</h1>
-      <Link to="/page-1">{t('backToHome')}</Link>
+      <Link to="/">{t('backToHome')}</Link>
     </Layout>
   );
 };

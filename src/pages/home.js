@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +13,6 @@ import { addUserDiscussion, updateUserDiscussion } from '../store/UserDiscussion
 import addChannelMessage, { updateChannelMessage } from '../store/ChannelMessageAction';
 import { updateMessageUserSelected } from '../store/MessageUserSelectedAction';
 import socket from '../socket';
-import { logout } from '../middleware/auth';
 import updateUserList from '../store/UserListAction';
 
 import '../assets/scss/pages/_page-1.css';
@@ -31,30 +29,25 @@ const Home = () => {
   socket.on('connect_error', (err) => {
     if (err.message === 'invalid username') {
       socket.off('connect_error');
-      logout();
+      message.error(t('socketFailed'));
     }
   });
 
   socket.on('session', (sessionId) => {
-    console.log(sessionId.sessionId);
     setCookie('SessionId', sessionId.sessionId, { path: '/' });
   });
 
   // LoadUsers
   socket.on('users', async (users) => {
-    console.log(users.users);
     await dispatch(updateUserList(users.users));
   });
 
   // LoadChats
   socket.on('chats', async (chats) => {
-    console.log(chats.chats);
     await dispatch(updateUserDiscussion(chats.chats));
   });
 
   socket.off('new chat').on('new chat', async (chat) => {
-    console.log('new chat');
-    console.log(chat);
     await dispatch(addUserDiscussion(chat.id, chat.other_user.pseudo, chat.other_user.id));
     if (chat.isEmitter) {
       await dispatch(
@@ -65,22 +58,18 @@ const Home = () => {
       const messagesReturn = await APIMessage.messages(chat.id);
       if (messagesReturn) {
         const { data } = messagesReturn;
-        console.log(data);
         if (messagesReturn.status === 200) {
-          console.log(data.data);
           await dispatch(updateChannelMessage(data.data));
         } else {
           await dispatch(updateChannelMessage([]));
         }
       } else {
-        message.error('Connexion failed');
+        message.error(t('serverUnreachable'));
       }
     }
   });
 
   socket.off('private message').on('private message', async (mess) => {
-    console.log('private message');
-    console.log(mess);
     if (mess.chat_id === messageUserSelected.chatId) {
       await dispatch(addChannelMessage(
         mess.id, messageUserSelected.pseudo, mess.content, mess.from_user, mess.to_user,
@@ -89,9 +78,9 @@ const Home = () => {
   });
 
   return (
-    <Layout className="app-camearadetails" isHeader>
+    <Layout className="" isHeader>
       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
-      <div classNameName="container">
+      <div className="container">
         <div className="page-title">
           <div className="row gutters">
             <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">

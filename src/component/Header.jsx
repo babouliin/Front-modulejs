@@ -6,7 +6,7 @@ import i18n from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 import { logout, isLogin } from '../middleware/auth';
-import updateHeaders from '../API/APIHeader';
+import updateHeaders, { updateHeadersToken } from '../API/APIHeader';
 import '../translations/i18n';
 
 const Header = (props) => {
@@ -20,8 +20,17 @@ const Header = (props) => {
   ];
   useEffect(() => setState(isLogin()), [props]);
 
+  useEffect(() => {
+    (function loadHeaderApi() {
+      updateHeaders(cookies.Lang ? cookies.Lang.toLowerCase() : 'en');
+      if (cookies.Token) {
+        updateHeadersToken(cookies.Token);
+      }
+    }());
+  }, [cookies]);
+
   const handleLogout = () => {
-    logout();
+    logout(t('logoutSuccess'));
     setState(false);
   };
 

@@ -26,7 +26,6 @@ function AddUserDiscussion() {
         if (userDiscussion.other_user.id
           === state.optionSelected) {
           hasExistingUserDiscussion = true;
-          console.log(hasExistingUserDiscussion);
           await dispatch(
             updateMessageUserSelected(
               userDiscussion.id, state.optionSelected, state.optionNameSelected,
@@ -37,7 +36,6 @@ function AddUserDiscussion() {
             if (messagesReturn) {
               const { data } = messagesReturn;
               if (messagesReturn.status === 200) {
-                console.log(data.data);
                 await dispatch(updateChannelMessage(data.data));
               } else {
                 await dispatch(updateChannelMessage([]));
@@ -67,8 +65,6 @@ function AddUserDiscussion() {
   });
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    console.log(document.getElementById(e.target.value).innerHTML);
     setState((prevState) => ({
       ...prevState,
       optionSelected: e.target.value,
